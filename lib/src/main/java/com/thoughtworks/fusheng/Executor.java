@@ -13,15 +13,15 @@ public class Executor {
 
     private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
-    public void exec(Map<String, Object> symbols, String jsCode) {
+    public Object exec(Map<String, Object> symbols, String jsCode) {
         ScriptEngine engine = scriptEngineManager.getEngineByName(JAVASCRIPT);
 
         symbols.forEach(engine::put);
 
         try {
-            engine.eval(jsCode);
+            return engine.eval(jsCode);
         } catch (ScriptException e) {
-            throw new ExecutorException("Run js code error", e);
+            throw new ExecutorException(String.format("Run JS code failed, cause by\n%s", e.getMessage()), e);
         }
 
     }

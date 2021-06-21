@@ -3,6 +3,8 @@ package com.thoughtworks.fusheng;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class ExecutorTest {
 
     public static class MockedFixture {
@@ -19,8 +21,10 @@ class ExecutorTest {
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
 
-        String jsCode = "c = fixture.add(2, 3);";
+        String jsCode = "fixture.add(2, 3);";
 
-        executor.exec(symbols, jsCode);
+        Object result = executor.exec(symbols, jsCode);
+
+        assertEquals(5, result);
     }
 }
