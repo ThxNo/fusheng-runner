@@ -19,7 +19,7 @@ class ReaderTest {
   void should_get_exception_when_receive_a_invalid_path() {
     String invalidPath = "lib/src/test/template/invalidPath.html";
     ReaderException readerException = assertThrows(ReaderException.class, () -> reader.read(invalidPath));
-    assertEquals("No such file: " + invalidPath, readerException.getErrorMessage());
+    assertEquals("No such file: " + invalidPath, readerException.getMessage());
   }
 
   @Test
