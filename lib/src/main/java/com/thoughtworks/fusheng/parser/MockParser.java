@@ -20,4 +20,8 @@ public class MockParser {
                 "    context[\"uuid1\"].expect.class.push(\"visibility\");\n" +
                 "}";
     }
+
+    public JSONObject getContextFromHtml(String html) {
+        return JSONObject.parseObject("{\"uuid1\":{\"expect\":{\"value\":1,\"class\":[\"assert-expect\"]},\"actual\":{\"value\":null,\"class\":[\"assert-actual\"]}}}");
+    }
 }
