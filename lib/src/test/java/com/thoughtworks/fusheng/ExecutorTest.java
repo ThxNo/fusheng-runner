@@ -1,6 +1,7 @@
 package com.thoughtworks.fusheng;
 
 import com.google.common.collect.ImmutableMap;
+import com.thoughtworks.fusheng.Executor.Context;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,11 +21,24 @@ class ExecutorTest {
         Executor executor = new Executor();
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
-
         String jsCode = "fixture.add(2, 3);";
 
-        Object result = executor.exec(symbols, jsCode);
+        Object result = executor.exec(symbols, jsCode, new Context());
 
         assertEquals(5, result);
+    }
+
+    @Test
+    void should_exec_js_and_set_context_success() {
+
+        Executor executor = new Executor();
+
+        ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
+        String jsCode = "context.result = fixture.add(5, 3);";
+
+        Context context = new Context();
+        executor.exec(symbols, jsCode, context);
+
+        assertEquals(8, context.getContext().get("result"));
     }
 }
