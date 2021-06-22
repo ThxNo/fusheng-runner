@@ -11,17 +11,16 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 public class Reader {
-  public String read(String path){
+  static public String read(String path) {
     try {
       String absolutePath = Optional.ofNullable(Reader.class.getClassLoader().getResource(path))
               .map(URL::getPath)
               .orElseThrow(() -> new ReaderException("No such file: " + path));
       return Files.readString(Paths.get(absolutePath), StandardCharsets.UTF_8);
     } catch (NoSuchFileException e) {
-      throw new ReaderException("No such file: " + path);
+      throw new ReaderException("No such file: " + path, e);
     } catch (IOException e) {
-      e.printStackTrace();
-      throw new ReaderException("Failed to read: " + path);
+      throw new ReaderException("Failed to read: " + path, e);
     }
   }
 }
