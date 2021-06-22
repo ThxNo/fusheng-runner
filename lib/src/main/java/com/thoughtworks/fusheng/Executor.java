@@ -17,8 +17,17 @@ public class Executor {
 
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
+    @AllArgsConstructor(staticName = "of")
+    public static class Context {
+        private final Map<String, Object> data;
 
-    public Map<String, Object> exec(Map<String, Object> symbols, String jsCode) {
+        public <T> T get(String fieldName) {
+            return (T) data.get(fieldName);
+        }
+    }
+
+
+    public Context exec(Map<String, Object> symbols, String jsCode) {
         ScriptEngine engine = scriptEngineManager.getEngineByName(scripting);
 
         engine.put("context", new HashMap<>());
@@ -26,10 +35,9 @@ public class Executor {
 
         try {
             engine.eval(jsCode);
-            return engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            return Context.of(engine.getBindings(ScriptContext.ENGINE_SCOPE));
         } catch (ScriptException e) {
             throw new ExecutorException(String.format("Run JS code failed, cause by\n%s", e.getMessage()), e);
         }
-
     }
 }
