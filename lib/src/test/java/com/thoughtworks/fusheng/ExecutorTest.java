@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ExecutorTest {
 
@@ -43,5 +44,53 @@ class ExecutorTest {
         Map<String, Object> context = ctx.get("context");
 
         assertEquals(8, context.get("result"));
+    }
+
+    @Test
+    void should_exec_js_and_get_nested_context_by_jsonpath_success() {
+
+        Executor executor = Executor.of("javascript");
+
+        String ctxString =
+                "        {\"expect\": {\n" +
+                        "            \"value\": 1,\n" +
+                        "            \"class\": [\"assert-expect\", \"error\"]\n" +
+                        "        },\n" +
+                        "        \"actual\": {\n" +
+                        "            \"value\": 2,\n" +
+                        "            \"class\": [\"assert-actual\", \"visible\"]\n" +
+                        "        }\n" +
+                        "    }";
+
+        ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
+        String jsCode = String.format("context.uuid1 = %s;", ctxString);
+
+        Context ctx = executor.exec(symbols, jsCode);
+        int value = ctx.getContext("$.uuid1.expect.value");
+
+        assertEquals(1, value);
+    }
+
+    @Test
+    void should_return_null_while_path_not_exists() {
+
+        Executor executor = Executor.of("javascript");
+
+        String ctxString =
+                "        {\"expect\": {\n" +
+                        "            \"value\": 1,\n" +
+                        "            \"class\": [\"assert-expect\", \"error\"]\n" +
+                        "        },\n" +
+                        "        \"actual\": {\n" +
+                        "            \"value\": 2,\n" +
+                        "            \"class\": [\"assert-actual\", \"visible\"]\n" +
+                        "        }\n" +
+                        "    }";
+
+        ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
+        String jsCode = String.format("context.uuid1 = %s;", ctxString);
+
+        Context ctx = executor.exec(symbols, jsCode);
+        assertNull(ctx.getContext("$.uuid1.expect.data"));
     }
 }

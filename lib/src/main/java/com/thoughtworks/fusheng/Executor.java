@@ -1,7 +1,10 @@
 package com.thoughtworks.fusheng;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
 import com.thoughtworks.fusheng.exception.ExecutorException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -15,14 +18,27 @@ public class Executor {
 
     private final String scripting;
 
+    private static final String CONTEXT_FIELD_NAME = "context";
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
-    @AllArgsConstructor(staticName = "of")
+    @RequiredArgsConstructor(staticName = "of")
     public static class Context {
         private final Map<String, Object> data;
+        private JSONObject context;
 
         public <T> T get(String fieldName) {
             return (T) data.get(fieldName);
+        }
+
+        public <T> T getContext(String jsonPath) {
+            if (context == null) {
+                context = new JSONObject(get(CONTEXT_FIELD_NAME));
+            }
+            try {
+                return (T) JSONPath.eval(context, jsonPath);
+            } catch (NullPointerException e) {
+                return null;
+            }
         }
     }
 
@@ -30,7 +46,7 @@ public class Executor {
     public Context exec(Map<String, Object> symbols, String jsCode) {
         ScriptEngine engine = scriptEngineManager.getEngineByName(scripting);
 
-        engine.put("context", new HashMap<>());
+        engine.put(CONTEXT_FIELD_NAME, new HashMap<>());
         symbols.forEach(engine::put);
 
         try {
