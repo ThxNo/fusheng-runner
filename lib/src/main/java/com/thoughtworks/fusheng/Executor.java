@@ -2,8 +2,8 @@ package com.thoughtworks.fusheng;
 
 import com.thoughtworks.fusheng.exception.ExecutorException;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -17,19 +17,16 @@ public class Executor {
 
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
-    @Data
-    public static class Context {
-        private Map<String, Object> context = new HashMap<>();
-    }
 
-    public Object exec(Map<String, Object> symbols, String jsCode, Context context) {
+    public Map<String, Object> exec(Map<String, Object> symbols, String jsCode) {
         ScriptEngine engine = scriptEngineManager.getEngineByName(scripting);
 
-        engine.put("context", context.getContext());
+        engine.put("context", new HashMap<>());
         symbols.forEach(engine::put);
 
         try {
-            return engine.eval(jsCode);
+            engine.eval(jsCode);
+            return engine.getBindings(ScriptContext.ENGINE_SCOPE);
         } catch (ScriptException e) {
             throw new ExecutorException(String.format("Run JS code failed, cause by\n%s", e.getMessage()), e);
         }
