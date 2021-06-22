@@ -17,10 +17,16 @@ public class ParserAdapter {
 
     private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.js";
 
-    public ParserAdapter(String scripting) throws FileNotFoundException, ScriptException {
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        engine = scriptEngineManager.getEngineByName(scripting);
-        engine.eval(new FileReader(scriptPath));
+    public ParserAdapter(String scripting) {
+        try {
+            ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+            engine = scriptEngineManager.getEngineByName(scripting);
+            engine.eval(new FileReader(scriptPath));
+        } catch (FileNotFoundException e) {
+            throw new ParserAdapterException("Not found file: " + scriptPath, e);
+        } catch (ScriptException e) {
+            throw new ParserAdapterException("Execute script exception: " + scriptPath, e);
+        }
     }
 
     private Object executeScript(String methodName, Object... args)  {
