@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ParserAdapterTest {
 
     @Test
-    void transformHtmlToDOMJson() throws ScriptException, FileNotFoundException, NoSuchMethodException {
+    void transformHtmlToDOMJson() throws ScriptException, FileNotFoundException {
         ParserAdapter javascript = new ParserAdapter("javascript");
         Object obj = javascript.transformHtmlToDOMJson("mock html");
         assertNotNull(obj);
     }
 
     @Test
-    void getExecutableCodeFromHtml() throws ScriptException, FileNotFoundException, NoSuchMethodException {
+    void getExecutableCodeFromHtml() throws ScriptException, FileNotFoundException {
         String expected = "let actual = a();\n" +
                 "context[\"uuid1\"].actual.value = actual;\n" +
                 "let result1 = actual == context[\"uuid1\"].expect.value;\n" +
@@ -36,7 +36,7 @@ class ParserAdapterTest {
     }
 
     @Test
-    void getContextFromHtml() throws ScriptException, FileNotFoundException, NoSuchMethodException {
+    void getContextFromHtml() throws ScriptException, FileNotFoundException {
         ParserAdapter javascript = new ParserAdapter("javascript");
         Object obj = javascript.getContextFromHtml("mock html");
         assertNotNull(obj);

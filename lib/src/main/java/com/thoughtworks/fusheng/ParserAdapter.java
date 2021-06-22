@@ -1,11 +1,15 @@
 package com.thoughtworks.fusheng;
 
+import com.alibaba.fastjson.JSONObject;
+import com.thoughtworks.fusheng.exception.ParserAdapterException;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Map;
 
 public class ParserAdapter {
 
@@ -19,15 +23,28 @@ public class ParserAdapter {
         engine.eval(new FileReader(scriptPath));
     }
 
-    public Object transformHtmlToDOMJson(String html) throws ScriptException, NoSuchMethodException {
-        return ((Invocable) engine).invokeFunction("transformHtmlToDOMJson", html);
+    private Object executeScript(String methodName, Object... args)  {
+        try {
+            Invocable invocable = (Invocable) this.engine;
+            return invocable.invokeFunction(methodName, args);
+        } catch (NoSuchMethodException e) {
+            throw new ParserAdapterException("No such methodName: " + methodName, e);
+        } catch (ScriptException e) {
+            throw new ParserAdapterException("Execute methodName exception: " + methodName, e);
+        }
     }
 
-    public String getExecutableCodeFromHtml(String html) throws ScriptException, NoSuchMethodException {
-        return (String) ((Invocable) engine).invokeFunction("getExecutableCodeFromHtml", html);
+    public JSONObject transformHtmlToDOMJson(String html) {
+        Object result = executeScript("transformHtmlToDOMJson", html);
+        return new JSONObject((Map<String, Object>) result);
     }
 
-    public Object getContextFromHtml(String html) throws ScriptException, NoSuchMethodException {
-        return ((Invocable) engine).invokeFunction("getContextFromHtml", html);
+    public String getExecutableCodeFromHtml(String html)  {
+        return (String) executeScript("getExecutableCodeFromHtml", html);
+    }
+
+    public JSONObject getContextFromHtml(String html) {
+        Object result = executeScript("getContextFromHtml", html);
+        return new JSONObject((Map<String, Object>) result);
     }
 }
