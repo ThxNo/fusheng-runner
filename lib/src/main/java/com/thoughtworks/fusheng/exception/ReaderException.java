@@ -7,6 +7,6 @@ public class ReaderException extends RunnerBaseException {
     }
 
     public ReaderException(String message, Throwable e) {
-        super(message);
+        super(message, e);
     }
 }
