@@ -15,7 +15,7 @@ public class Executor {
 
     private final String scripting;
 
-    private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+    private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
     @Data
     public static class Context {
