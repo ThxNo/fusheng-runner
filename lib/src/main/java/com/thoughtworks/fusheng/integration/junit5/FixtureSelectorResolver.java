@@ -25,34 +25,16 @@ import java.util.Optional;
 
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
-/**
- * @since 4.12
- */
-class ClassSelectorResolver implements SelectorResolver {
-	public static final String ENGINE_ID = "fu-sheng";
-	public static final String SEGMENT_TYPE_RUNNER = "runner";
-	public static final String SEGMENT_TYPE_TEST = "test";
+class FixtureSelectorResolver implements SelectorResolver {
 	private final ClassFilter classFilter;
 
-	ClassSelectorResolver(ClassFilter classFilter) {
+	FixtureSelectorResolver(ClassFilter classFilter) {
 		this.classFilter = classFilter;
 	}
 
 	@Override
 	public Resolution resolve(ClassSelector selector, Context context) {
 		return resolveTestClass(selector.getJavaClass(), context);
-	}
-
-	@Override
-	public Resolution resolve(UniqueIdSelector selector, Context context) {
-		Segment lastSegment = selector.getUniqueId().getLastSegment();
-		if (SEGMENT_TYPE_RUNNER.equals(lastSegment.getType())) {
-			String testClassName = lastSegment.getValue();
-			Class<?> testClass = ReflectionUtils.tryToLoadClass(testClassName)//
-					.getOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
-			return resolveTestClass(testClass, context);
-		}
-		return unresolved();
 	}
 
 	private Resolution resolveTestClass(Class<?> testClass, Context context) {
@@ -64,9 +46,8 @@ class ClassSelectorResolver implements SelectorResolver {
 			runnerTestDescriptor -> Match.exact(runnerTestDescriptor, Collections::emptySet)).map(Resolution::match).orElse(unresolved());
 	}
 
-	private FuShengRunnerDescriptor createRunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, FuShengRunner runner) {
-		UniqueId uniqueId = parent.getUniqueId().append("runner", testClass.getName());
-		return new FuShengRunnerDescriptor(uniqueId, testClass, runner);
+	private FuShengFixtureDescriptor createRunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, FuShengRunner runner) {
+		UniqueId uniqueId = parent.getUniqueId().append(FuShengTestDescriptor.SEGMENT_TYPE_FIXTURE, testClass.getName());
+		return new FuShengFixtureDescriptor(uniqueId, testClass, runner);
 	}
-
 }

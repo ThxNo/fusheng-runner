@@ -11,13 +11,17 @@ public class FuShengDiscoverySelectorResolver {
 
     private static final EngineDiscoveryRequestResolver<TestDescriptor> resolver = EngineDiscoveryRequestResolver.builder()
                                                                                                                  .addClassContainerSelectorResolver(isPotentialFuShengTestClass)
-                                                                                                                 .addSelectorResolver(context -> new ClassSelectorResolver(ClassFilter.of(context.getClassNameFilter(), isPotentialFuShengTestClass)))
+                                                                                                                 .addSelectorResolver(context -> new FixtureSelectorResolver(ClassFilter.of(context.getClassNameFilter(), isPotentialFuShengTestClass)))
                                                                                                                  .build();
 
     public TestDescriptor resolve(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-        FuShengTestSourceProvider testSourceProvider = new FuShengTestSourceProvider();
-        FuShengEngineDescriptor engineDescriptor = new FuShengEngineDescriptor(uniqueId, testSourceProvider);
+        FuShengEngineDescriptor engineDescriptor = new FuShengEngineDescriptor(uniqueId);
         resolver.resolve(discoveryRequest, engineDescriptor);
+        FuShengFixtureDescriptorPostProcessor postProcessor = new FuShengFixtureDescriptorPostProcessor();
+        engineDescriptor.getChildren().stream()
+                        .filter(FuShengFixtureDescriptor.class::isInstance)
+                        .map(FuShengFixtureDescriptor.class::cast)
+                        .forEach(postProcessor::createDescendants);
         return engineDescriptor;
     }
 }

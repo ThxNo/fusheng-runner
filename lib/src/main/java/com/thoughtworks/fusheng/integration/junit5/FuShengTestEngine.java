@@ -24,17 +24,14 @@ public class FuShengTestEngine implements TestEngine {
         TestDescriptor engineDescriptor = request.getRootTestDescriptor();
         EngineExecutionListener listener = request.getEngineExecutionListener();
         listener.executionStarted(engineDescriptor);
-        for (TestDescriptor testDescriptor : engineDescriptor.getChildren()) {
-            // cast it to our own class
-            FuShengRunnerDescriptor descriptor = (FuShengRunnerDescriptor) testDescriptor;
-            listener.executionStarted(testDescriptor);
-            // here you would add your super-complicated logic of how to actually run the test
-            if (descriptor.getDisplayName().contains("Test")) {
+        for (TestDescriptor fixtureDescriptor : engineDescriptor.getChildren()) {
+            listener.executionStarted(fixtureDescriptor);
+            for (TestDescriptor testDescriptor : fixtureDescriptor.getChildren()) {
+                listener.executionStarted(testDescriptor);
+                System.out.println("run example");
                 listener.executionFinished(testDescriptor, TestExecutionResult.successful());
-            } else {
-                listener.executionFinished(testDescriptor, TestExecutionResult.failed(new AssertionError("Test was incorrect.")));
             }
-
+            listener.executionFinished(fixtureDescriptor, TestExecutionResult.successful());
         }
         listener.executionFinished(engineDescriptor, TestExecutionResult.successful());
     }

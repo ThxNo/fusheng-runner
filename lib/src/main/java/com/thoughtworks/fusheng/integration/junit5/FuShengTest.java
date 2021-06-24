@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Inherited
 @Documented
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FuShengTest {
 }
