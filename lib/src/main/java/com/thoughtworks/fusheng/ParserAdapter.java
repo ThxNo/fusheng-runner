@@ -45,7 +45,7 @@ public class ParserAdapter {
         return new JSONObject((Map<String, Object>) result);
     }
 
-    public String transformDomJSONToHtml(String html)  {
-        return (String) executeScript("transformDomJSONToHtml", html);
+    public String transformDomJSONToHtml(JSONObject domJSON)  {
+        return (String) executeScript("transformDomJSONToHtml", domJSON);
     }
 }
