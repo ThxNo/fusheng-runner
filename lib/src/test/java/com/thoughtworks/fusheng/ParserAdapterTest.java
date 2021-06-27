@@ -11,34 +11,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ParserAdapterTest {
 
     @Test
-    void transformHtmlToDOMJson() {
+    void getJSCodeAndDomJSON() {
         ParserAdapter javascript = new ParserAdapter("javascript");
-        Object obj = javascript.transformHtmlToDOMJson("mock html");
+        Object obj = javascript.getJSCodeAndDomJSON("mock html");
         assertNotNull(obj);
     }
 
     @Test
-    void getExecutableCodeFromHtml() {
-        String expected = "let actual = a();\n" +
-                "context[\"uuid1\"].actual.value = actual;\n" +
-                "let result1 = actual == context[\"uuid1\"].expect.value;\n" +
-                "if (result1) {\n" +
-                "    context[\"uuid1\"].actual.class.push(\"success\");\n" +
-                "    context[\"uuid1\"].expect.class.push(\"invisibility\");\n" +
-                "} else {\n" +
-                "    context[\"uuid1\"].actual.class.push(\"error\");\n" +
-                "    context[\"uuid1\"].expect.class.push(\"visibility\");\n" +
-                "}";
+    void transformDomJSONToHtml() {
+        String expected = "<p class=\"example\" ctxId=\"uuid1\">\n" +
+                "pot为\n" +
+                "<span class=\"assertion error\" data-action=\"getPot\" data-expect=“equal” data-id=\"uuid2\">\n" +
+                "    <span class=\"assert-expect\">1</span>\n" +
+                "\t<span class=\"assert-actual\">2</span>\n" +
+                "</span>\n" +
+                "</p>";
 
         ParserAdapter javascript = new ParserAdapter("javascript");
-        Object obj = javascript.getExecutableCodeFromHtml("mock html");
+        Object obj = javascript.transformDomJSONToHtml("mock html");
         assertEquals(obj, expected);
-    }
-
-    @Test
-    void getContextFromHtml() {
-        ParserAdapter javascript = new ParserAdapter("javascript");
-        Object obj = javascript.getContextFromHtml("mock html");
-        assertNotNull(obj);
     }
 }

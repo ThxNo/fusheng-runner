@@ -40,17 +40,12 @@ public class ParserAdapter {
         }
     }
 
-    public JSONObject transformHtmlToDOMJson(String html) {
-        Object result = executeScript("transformHtmlToDOMJson", html);
+    public JSONObject getJSCodeAndDomJSON(String html) {
+        Object result = executeScript("getJSCodeAndDomJSON", html);
         return new JSONObject((Map<String, Object>) result);
     }
 
-    public String getExecutableCodeFromHtml(String html)  {
-        return (String) executeScript("getExecutableCodeFromHtml", html);
-    }
-
-    public JSONObject getContextFromHtml(String html) {
-        Object result = executeScript("getContextFromHtml", html);
-        return new JSONObject((Map<String, Object>) result);
+    public String transformDomJSONToHtml(String html)  {
+        return (String) executeScript("transformDomJSONToHtml", html);
     }
 }
