@@ -11,10 +11,6 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 public class Reader {
-  static public String getSpecFilePath(String fixturePath) {
-    return fixturePath.replace("fixture", "template").replace(".java", ".html");
-  }
-
   static public String read(String path) {
     try {
       String absolutePath = Optional.ofNullable(Reader.class.getClassLoader().getResource(path))
@@ -26,5 +22,13 @@ public class Reader {
     } catch (IOException e) {
       throw new ReaderException("Failed to read: " + path, e);
     }
+  }
+
+  static public String getSpecFilePath(String fixturePath) {
+    return fixturePath.replace("fixture", "template").replace(".java", ".html");
+  }
+
+  public static String getSpecByFixture(String fixturePath) {
+    return read(getSpecFilePath(fixturePath));
   }
 }
