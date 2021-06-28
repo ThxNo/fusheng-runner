@@ -30,7 +30,7 @@ class ParserAdapterTest {
                 "   \"name\": \"p\",\n" +
                 "   \"attrs\": {\n" +
                 "       \"class\": \"example\",\n" +
-                "       \"ctxId\":\"uuid1\"\n" +
+                "       \"context-id\":\"uuid1\"\n" +
                 "   },\n" +
                 "   \"voidElement\": false,\n" +
                 "   \"children\": [\n" +
@@ -41,7 +41,7 @@ class ParserAdapterTest {
                 "       {\n" +
                 "           \"type\": \"tag\",\n" +
                 "           \"name\": \"span\",\n" +
-                "           \"attrs\": {\"class\":\"assertion error\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"data-id\":\"uuid2\"},\n" +
+                "           \"attrs\": {\"class\":\"assertion error\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"assertion-id\":\"uuid2\"},\n" +
                 "           \"voidElement\": false,\n" +
                 "           \"children\": [\n" +
                 "               {\n" +
@@ -73,9 +73,9 @@ class ParserAdapterTest {
                 "   ]\n" +
                 "}");
 
-        String expected = "<p class=\"example\" ctxId=\"uuid1\">\n" +
+        String expected = "<p class=\"example\" context-id=\"uuid1\">\n" +
                 "pot为\n" +
-                "<span class=\"assertion error\" data-action=\"getPot\" data-expect=“equal” data-id=\"uuid2\">\n" +
+                "<span class=\"assertion error\" data-action=\"getPot\" data-expect=“equal” assertion-id=\"uuid2\">\n" +
                 "    <span class=\"assert-expect\">1</span>\n" +
                 "\t<span class=\"assert-actual\">2</span>\n" +
                 "</span>\n" +

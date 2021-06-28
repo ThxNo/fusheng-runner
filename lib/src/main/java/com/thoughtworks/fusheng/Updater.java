@@ -21,7 +21,7 @@ public class Updater {
         JSONObject attrs = getAttrsJsonObject(jsonObject);
 
         if (attrs != null) {
-          Object id = attrs.getInnerMap().get("data-id");
+          Object id = attrs.getInnerMap().get("assertion-id");
           if (Objects.equals(id, uuid)) {
             JSONArray innerChildren = getChildren(jsonObject);
             for (int j = 0; j < innerChildren.size(); j++) {

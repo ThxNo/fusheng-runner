@@ -39,7 +39,7 @@ class UpdaterTest {
             "    \"type\": \"tag\",\n" +
             "    \"name\": \"p\",\n" +
             "    \"attrs\": {\n" +
-            "        \"class\": \"example\",\"ctxId\":\"uuid1\"\n" +
+            "        \"class\": \"example\",\"context-id\":\"uuid1\"\n" +
             "    },\n" +
             "    \"voidElement\": false,\n" +
             "    \"children\": [\n" +
@@ -50,7 +50,7 @@ class UpdaterTest {
             "        {\n" +
             "            \"type\": \"tag\",\n" +
             "            \"name\": \"span\",\n" +
-            "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"data-id\":\"uuid2\"},\n" +
+            "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"assertion-id\":\"uuid2\"},\n" +
             "            \"voidElement\": false,\n" +
             "            \"children\": [\n" +
             "                {\n" +
@@ -89,7 +89,7 @@ class UpdaterTest {
             "    \"type\": \"tag\",\n" +
             "    \"name\": \"p\",\n" +
             "    \"attrs\": {\n" +
-            "        \"class\": \"example\",\"ctxId\":\"uuid1\"\n" +
+            "        \"class\": \"example\",\"context-id\":\"uuid1\"\n" +
             "    },\n" +
             "    \"voidElement\": false,\n" +
             "    \"children\": [\n" +
@@ -100,7 +100,7 @@ class UpdaterTest {
             "        {\n" +
             "            \"type\": \"tag\",\n" +
             "            \"name\": \"span\",\n" +
-            "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"data-id\":\"uuid2\"},\n" +
+            "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"assertion-id\":\"uuid2\"},\n" +
             "            \"voidElement\": false,\n" +
             "            \"children\": [\n" +
             "                {\n" +
