@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.fusheng.Executor.Context;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -16,48 +15,33 @@ public class Updater {
     Set<Map.Entry<String, Object>> entries = ctx.entrySet();
 
     entries.forEach(entry -> {
-      String key = entry.getKey();
+      String uuid = entry.getKey();
 
       for (int i = 0; i < children.size(); i++) {
         JSONObject jsonObject = children.getJSONObject(i);
-        JSONObject attrs = jsonObject.getObject("attrs", JSONObject.class);
+        JSONObject attrs = getAttrsJsonObject(jsonObject);
 
         if (attrs != null) {
-          Map<String, Object> innerMap = attrs.getInnerMap();
-          Object id = innerMap.get("data-id");
+          Object id = attrs.getInnerMap().get("data-id");
 
-          if (Objects.equals(id, key)) {
+          if (Objects.equals(id, uuid)) {
             JSONArray innerChildren = jsonObject.getJSONArray("children");
 
             for (int j = 0; j < innerChildren.size(); j++) {
               JSONObject childObject = innerChildren.getJSONObject(j);
-              JSONObject childAttrs = childObject.getObject("attrs", JSONObject.class);
-              JSONArray childrenDom = childObject.getJSONArray("children");
+              JSONObject innerAttrs = getAttrsJsonObject(childObject);
 
-              if (childAttrs != null) {
-                Map<String, Object> childInnerMap = childAttrs.getInnerMap();
+              if (innerAttrs != null) {
+                Map<String, Object> childInnerMap = innerAttrs.getInnerMap();
                 Object assertType = childInnerMap.get("class");
 
-                if (Objects.equals(assertType, "assert-expect")) {
-                  int value = context.getContext("$." + key + ".expect.value");
-                  Map<String, String> classnames = context.getContext("$." + key + ".expect.class");
-                  childInnerMap.put("class", String.join(" ", classnames.values()));
-                  for (int k = 0; k < childrenDom.size(); k++) {
-                    JSONObject dom = childrenDom.getJSONObject(k);
-                    Map<String, Object> domInnerMap = dom.getInnerMap();
-                    domInnerMap.put("content", value);
-                  }
+                if (((String) assertType).contains("assert-expect")) {
+                  updateDom(context, uuid, childObject.getJSONArray("children"), childInnerMap, "expect");
+                  continue;
                 }
 
-                if (Objects.equals(assertType, "assert-actual")) {
-                  int value = context.getContext("$." + key + ".actual.value");
-                  Map<String, String> classnames = context.getContext("$." + key + ".actual.class");
-                  childInnerMap.put("class", String.join(" ", classnames.values()));
-                  for (int k = 0; k < childrenDom.size(); k++) {
-                    JSONObject dom = childrenDom.getJSONObject(k);
-                    Map<String, Object> domInnerMap = dom.getInnerMap();
-                    domInnerMap.put("content", value);
-                  }
+                if (((String) assertType).contains("assert-actual")) {
+                  updateDom(context, uuid, childObject.getJSONArray("children"), childInnerMap, "actual");
                 }
               }
             }
@@ -69,5 +53,21 @@ public class Updater {
     });
 
     return domJson;
+  }
+
+  private static JSONObject getAttrsJsonObject(JSONObject jsonObject) {
+    return jsonObject.getObject("attrs", JSONObject.class);
+  }
+
+  private static void updateDom(Context context, String key, JSONArray childrenDom, Map<String, Object> childInnerMap, String field) {
+    int value = context.getContext("$." + key + "." + field + ".value");
+    Map<String, String> classnames = context.getContext("$." + key + "." + field + ".class");
+
+    childInnerMap.put("class", String.join(" ", classnames.values()));
+    for (int i = 0; i < childrenDom.size(); i++) {
+      JSONObject domJson = childrenDom.getJSONObject(i);
+      Map<String, Object> domJsonMap = domJson.getInnerMap();
+      domJsonMap.put("content", value);
+    }
   }
 }
