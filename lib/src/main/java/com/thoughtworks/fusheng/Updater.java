@@ -56,11 +56,11 @@ public class Updater {
     return jsonObject.getObject("attrs", JSONObject.class);
   }
 
-  private static void updateDom(Context context, String key, JSONObject childrenDom, Map<String, Object> childInnerMap, String field) {
+  private static void updateDom(Context context, String key, JSONObject childDom, Map<String, Object> childInnerMap, String field) {
     int value = context.getContext("$." + key + "." + field + ".value");
     Map<String, String> classnames = context.getContext("$." + key + "." + field + ".class");
 
     childInnerMap.put("class", String.join(" ", classnames.values()));
-    childrenDom.getInnerMap().put("content", value);
+    childDom.getInnerMap().put("content", value);
   }
 }
