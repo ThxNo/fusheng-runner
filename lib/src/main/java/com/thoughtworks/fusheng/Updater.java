@@ -10,9 +10,8 @@ import java.util.Set;
 
 public class Updater {
   static public JSONObject update(Context context, JSONObject domJson) {
-    JSONObject ctx = context.getContext("$");
-    JSONArray children = domJson.getJSONArray("children");
-    Set<Map.Entry<String, Object>> entries = ctx.entrySet();
+    Set<Map.Entry<String, Object>> entries = context.<JSONObject>getContext("$").entrySet();
+    JSONArray children = getChildren(domJson);
 
     entries.forEach(entry -> {
       String uuid = entry.getKey();
@@ -23,25 +22,19 @@ public class Updater {
 
         if (attrs != null) {
           Object id = attrs.getInnerMap().get("data-id");
-
           if (Objects.equals(id, uuid)) {
-            JSONArray innerChildren = jsonObject.getJSONArray("children");
-
+            JSONArray innerChildren = getChildren(jsonObject);
             for (int j = 0; j < innerChildren.size(); j++) {
               JSONObject childObject = innerChildren.getJSONObject(j);
               JSONObject innerAttrs = getAttrsJsonObject(childObject);
-
               if (innerAttrs != null) {
                 Map<String, Object> childInnerMap = innerAttrs.getInnerMap();
-                Object assertType = childInnerMap.get("class");
-
-                if (((String) assertType).contains("assert-expect")) {
-                  updateDom(context, uuid, childObject.getJSONArray("children"), childInnerMap, "expect");
-                  continue;
+                JSONObject childDom = getChildren(childObject).getJSONObject(0);
+                if (((String) childInnerMap.get("class")).contains("assert-expect")) {
+                  updateDom(context, uuid, childDom, childInnerMap, "expect");
                 }
-
-                if (((String) assertType).contains("assert-actual")) {
-                  updateDom(context, uuid, childObject.getJSONArray("children"), childInnerMap, "actual");
+                if (((String) childInnerMap.get("class")).contains("assert-actual")) {
+                  updateDom(context, uuid, childDom, childInnerMap, "actual");
                 }
               }
             }
@@ -55,19 +48,19 @@ public class Updater {
     return domJson;
   }
 
+  private static JSONArray getChildren(JSONObject domJson) {
+    return domJson.getJSONArray("children");
+  }
+
   private static JSONObject getAttrsJsonObject(JSONObject jsonObject) {
     return jsonObject.getObject("attrs", JSONObject.class);
   }
 
-  private static void updateDom(Context context, String key, JSONArray childrenDom, Map<String, Object> childInnerMap, String field) {
+  private static void updateDom(Context context, String key, JSONObject childrenDom, Map<String, Object> childInnerMap, String field) {
     int value = context.getContext("$." + key + "." + field + ".value");
     Map<String, String> classnames = context.getContext("$." + key + "." + field + ".class");
 
     childInnerMap.put("class", String.join(" ", classnames.values()));
-    for (int i = 0; i < childrenDom.size(); i++) {
-      JSONObject domJson = childrenDom.getJSONObject(i);
-      Map<String, Object> domJsonMap = domJson.getInnerMap();
-      domJsonMap.put("content", value);
-    }
+    childrenDom.getInnerMap().put("content", value);
   }
 }
