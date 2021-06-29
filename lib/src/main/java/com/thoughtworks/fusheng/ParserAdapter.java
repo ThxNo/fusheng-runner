@@ -40,9 +40,10 @@ public class ParserAdapter {
         }
     }
 
-    public JSONObject getJSCodeAndDomJSON(String html) {
+    public Map<String, Object> getJSCodeAndDomJSON(String html) {
         Object result = executeScript("getJSCodeAndDomJSON", html);
-        return new JSONObject((Map<String, Object>) result);
+
+        return (Map<String, Object>) result;
     }
 
     public String transformDomJSONToHtml(JSONObject domJSON)  {

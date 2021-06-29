@@ -36,14 +36,11 @@ public class RunnerFacadeImpl implements RunnerFacade {
         Map<String, Object> symbols = ImmutableMap.of("fixture", fixtureInstance);
 
         String spec = Reader.getSpecByFixture(getFixturePathByClassName(fixtureClassName));
-        // JSONObject jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
-        // Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
-
-        Map<String, Object> jsCodeAndDomJSON = ImmutableMap.of("jsCode", "", "domJSON", null);
+        Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
 
         Context context = executor.exec(symbols, (String) jsCodeAndDomJSON.get("jsCode"));
 
-        JSONObject domJson = (JSONObject) jsCodeAndDomJSON.get("jsCode");
+        JSONObject domJson = (JSONObject) jsCodeAndDomJSON.get("domJson");
 
         Updater.update(context, domJson);
     }

@@ -3,6 +3,8 @@ package com.thoughtworks.fusheng;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,7 +17,7 @@ class ParserAdapterTest {
                 "</p>";
 
         ParserAdapter javascript = new ParserAdapter("javascript");
-        JSONObject obj = javascript.getJSCodeAndDomJSON(html);
+        Map<String, Object> obj = javascript.getJSCodeAndDomJSON(html);
         Object jsCode = obj.get("jsCode");
         Object domJSON = obj.get("domJSON");
 
