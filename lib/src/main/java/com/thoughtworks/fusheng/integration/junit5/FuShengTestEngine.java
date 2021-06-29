@@ -1,9 +1,7 @@
 package com.thoughtworks.fusheng.integration.junit5;
 
-import com.thoughtworks.fusheng.Executor;
-import com.thoughtworks.fusheng.ExecutorFactory;
-import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
-import com.thoughtworks.fusheng.exception.FixtureNotFoundException;
+import com.thoughtworks.fusheng.RunnerFacade;
+import com.thoughtworks.fusheng.RunnerFacadeImpl;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -13,6 +11,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 
 public class FuShengTestEngine implements TestEngine {
+
     @Override
     public String getId() {
         return "fu-sheng";
@@ -29,28 +28,19 @@ public class FuShengTestEngine implements TestEngine {
         EngineExecutionListener listener = request.getEngineExecutionListener();
         listener.executionStarted(engineDescriptor);
         for (TestDescriptor fixtureDescriptor : engineDescriptor.getChildren()) {
+
             listener.executionStarted(fixtureDescriptor);
-            Object fixtureInstance = getFixtureInstance(fixtureDescriptor.getDisplayName());
-            Executor executor = ExecutorFactory.getJsExecutor();
+            RunnerFacade runnerFacade = RunnerFacadeImpl.of(fixtureDescriptor.getDisplayName());
 
             for (TestDescriptor testDescriptor : fixtureDescriptor.getChildren()) {
                 listener.executionStarted(testDescriptor);
                 System.out.println("run example");
+                runnerFacade.run(testDescriptor.getDisplayName());
                 listener.executionFinished(testDescriptor, TestExecutionResult.successful());
             }
 
             listener.executionFinished(fixtureDescriptor, TestExecutionResult.successful());
         }
         listener.executionFinished(engineDescriptor, TestExecutionResult.successful());
-    }
-
-    private Object getFixtureInstance(String fixtureClassName) {
-        try {
-            return Class.forName(fixtureClassName).newInstance();
-        } catch (ClassNotFoundException e) {
-            throw new FixtureNotFoundException(String.format("fixture %s not found", fixtureClassName), e);
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClassName), e);
-        }
     }
 }
