@@ -60,12 +60,12 @@ public class Updater {
     childInnerMap.put("class", String.join(" ", classnames.values()));
   }
 
-  private static void updateContent(JSONObject childDom, int value) {
+  private static void updateContent(JSONObject childDom, Object value) {
     childDom.getInnerMap().put("content", value);
   }
 
   private static void updateSpecifiedDomJson(Context context, String key, JSONObject childDom, Map<String, Object> childInnerMap, String field) {
-    int value = context.getContext("$." + key + "." + field + ".value");
+    Object value = context.getContext("$." + key + "." + field + ".value");
     Map<String, String> classnames = context.getContext("$." + key + "." + field + ".class");
 
     updateClass(childInnerMap, classnames);
