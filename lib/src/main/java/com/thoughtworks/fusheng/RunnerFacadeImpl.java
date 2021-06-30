@@ -5,8 +5,9 @@ import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
 import com.thoughtworks.fusheng.exception.FixtureNotFoundException;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
@@ -31,7 +32,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
     }
 
     @Override
-    public void run(String testName) {
+    public Boolean run(String testName) {
         Object fixtureInstance = getFixtureInstance(fixtureClassName);
         Executor executor = ExecutorFactory.getJsExecutor();
 
@@ -51,5 +52,8 @@ public class RunnerFacadeImpl implements RunnerFacade {
         JSONObject domJson = (JSONObject) jsCodeAndDomJSON.get("domJson");
 
         Updater.update(context, domJson);
+
+        // 暂时假定测试都是成功的
+        return true;
     }
 }

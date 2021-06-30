@@ -2,6 +2,7 @@ package com.thoughtworks.fusheng.integration.junit5;
 
 import com.thoughtworks.fusheng.RunnerFacade;
 import com.thoughtworks.fusheng.RunnerFacadeImpl;
+import com.thoughtworks.fusheng.exception.ExampleFailedException;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -34,9 +35,14 @@ public class FuShengTestEngine implements TestEngine {
 
             for (TestDescriptor testDescriptor : fixtureDescriptor.getChildren()) {
                 listener.executionStarted(testDescriptor);
-                System.out.println("run example");
-                runnerFacade.run(testDescriptor.getDisplayName());
-                listener.executionFinished(testDescriptor, TestExecutionResult.successful());
+
+                // TODO: testDescriptor 是spec中的每个example
+
+                if (runnerFacade.run(testDescriptor.getDisplayName())) {
+                    listener.executionFinished(testDescriptor, TestExecutionResult.successful());
+                } else {
+                    listener.executionFinished(testDescriptor, TestExecutionResult.failed(new ExampleFailedException("")));
+                }
             }
 
             listener.executionFinished(fixtureDescriptor, TestExecutionResult.successful());
