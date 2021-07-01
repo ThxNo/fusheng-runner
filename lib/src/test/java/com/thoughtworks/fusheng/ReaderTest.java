@@ -36,7 +36,7 @@ class ReaderTest {
   @Test
   void should_get_spec_html_path_when_receive_a_valid_fixture_path() {
     String expected = "template/spec.html";
-    String actual = Reader.getSpecFilePath("fixture/spec.java");
+    String actual = Reader.getSpecFilePath("spec.java");
 
     assertEquals(expected, actual);
   }
@@ -56,7 +56,7 @@ class ReaderTest {
             "  </p>\n" +
             "</body>\n" +
             "</html>\n";
-    String actual = Reader.getSpecByFixture("fixture/spec.java");
+    String actual = Reader.getSpecByFixture("spec.java");
 
     assertEquals(expected, actual);
   }

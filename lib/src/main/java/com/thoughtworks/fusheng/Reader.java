@@ -24,11 +24,11 @@ public class Reader {
     }
   }
 
-  static public String getSpecFilePath(String fixturePath) {
-    return fixturePath.replace("fixture", "template").replace(".java", ".html");
+  static public String getSpecFilePath(String fixtureFileName) {
+    return "template/" + fixtureFileName.replace(".java", ".html");
   }
 
-  public static String getSpecByFixture(String fixturePath) {
-    return read(getSpecFilePath(fixturePath));
+  public static String getSpecByFixture(String fixtureFileName) {
+    return read(getSpecFilePath(fixtureFileName));
   }
 }

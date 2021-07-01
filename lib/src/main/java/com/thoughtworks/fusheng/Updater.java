@@ -44,10 +44,6 @@ public class Updater {
     }
   }
 
-  private static boolean isIncludeSpecifiedClass(Map<String, Object> childInnerMap, String classname) {
-    return ((String) childInnerMap.get("class")).contains(classname);
-  }
-
   private static JSONArray getChildren(JSONObject domJson) {
     return domJson.getJSONArray("children");
   }
@@ -70,6 +66,10 @@ public class Updater {
 
     updateClass(childInnerMap, classnames);
     updateContent(childDom, value);
+  }
+
+  private static boolean isIncludeSpecifiedClass(Map<String, Object> childInnerMap, String classname) {
+    return ((String) childInnerMap.get("class")).contains(classname);
   }
 
   private static void updateDomJson(Context context, String uuid, JSONObject childObject, JSONObject attrs) {
