@@ -1,6 +1,5 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.fusheng.exception.ParserAdapterException;
 
 import javax.script.Invocable;
@@ -15,7 +14,7 @@ public class ParserAdapter {
 
     private final ScriptEngine engine;
 
-    private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.js";
+    private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.cjs.js";
 
     public ParserAdapter(String scripting) {
         try {
@@ -46,7 +45,7 @@ public class ParserAdapter {
         return (Map<String, Object>) result;
     }
 
-    public String transformDomJSONToHtml(JSONObject domJSON)  {
+    public String transformDomJSONToHtml(Object domJSON)  {
         return (String) executeScript("transformDomJSONToHtml", domJSON);
     }
 }

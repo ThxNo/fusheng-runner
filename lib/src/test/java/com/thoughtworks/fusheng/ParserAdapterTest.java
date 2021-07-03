@@ -13,7 +13,7 @@ class ParserAdapterTest {
     @Test
     void getJSCodeAndDomJSON() {
         String html = "<p class=\"example\">\n" +
-                "pot为<span class=\"assertion\" data-action=\"getPot\" data-expect=“equal”>1</span>\n" +
+                "pot为<span class=\"assertion\" data-action=\"getPot\" data-expect=\"equal\">1</span>\n" +
                 "</p>";
 
         ParserAdapter javascript = new ParserAdapter("javascript");
@@ -27,7 +27,7 @@ class ParserAdapterTest {
 
     @Test
     void transformDomJSONToHtml() {
-        JSONObject domJSON = JSONObject.parseObject("{\n" +
+        String domJSON = "[{\n" +
                 "   \"type\": \"tag\",\n" +
                 "   \"name\": \"p\",\n" +
                 "   \"attrs\": {\n" +
@@ -73,18 +73,12 @@ class ParserAdapterTest {
                 "           ]\n" +
                 "       }\n" +
                 "   ]\n" +
-                "}");
+                "}]";
 
-        String expected = "<p class=\"example\" context-id=\"uuid1\">\n" +
-                "pot为\n" +
-                "<span class=\"assertion error\" data-action=\"getPot\" data-expect=“equal” assertion-id=\"uuid2\">\n" +
-                "    <span class=\"assert-expect\">1</span>\n" +
-                "\t<span class=\"assert-actual\">2</span>\n" +
-                "</span>\n" +
-                "</p>";
+        String expected = "<p class=\"example\" context-id=\"uuid1\">pot为<span class=\"assertion error\" data-expect=\"equal\" data-action=\"getPot\" assertion-id=\"uuid2\"><span class=\"assert-expect\">1</span><span class=\"assert-actual\">2</span></span></p>";
 
         ParserAdapter javascript = new ParserAdapter("javascript");
-        Object obj = javascript.transformDomJSONToHtml(domJSON);
-        assertEquals(obj, expected);
+        String result = javascript.transformDomJSONToHtml(domJSON);
+        assertEquals(expected, result);
     }
 }
