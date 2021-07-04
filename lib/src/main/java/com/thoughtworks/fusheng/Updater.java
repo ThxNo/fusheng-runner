@@ -9,16 +9,20 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Updater {
-  static public JSONObject update(Context context, JSONObject domJson) {
+  static public JSONArray update(Context context, JSONArray domJsonArray) {
     Set<Map.Entry<String, Object>> entries = context.<JSONObject>getContext("$").entrySet();
-    JSONArray children = getChildren(domJson);
 
-    entries.forEach(entry -> {
-      String uuid = entry.getKey();
-      handleDomJson(context, children, uuid);
-    });
+    for (int i = 0; i < domJsonArray.size(); i++) {
+      JSONObject domJson = domJsonArray.getJSONObject(i);
+      JSONArray children = getChildren(domJson);
 
-    return domJson;
+      entries.forEach(entry -> {
+        String uuid = entry.getKey();
+        handleDomJson(context, children, uuid);
+      });
+    }
+
+    return domJsonArray;
   }
 
   private static void handleDomJson(Context context, JSONArray children, String uuid) {

@@ -1,5 +1,6 @@
 package com.thoughtworks.fusheng;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
@@ -49,9 +50,9 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
         Context context = executor.exec(symbols, jsCode);
 
-        JSONObject domJson = (JSONObject) jsCodeAndDomJSON.get("domJson");
+        JSONArray domJsonArray = (JSONArray) jsCodeAndDomJSON.get("domJson");
 
-        Updater.update(context, domJson);
+        Updater.update(context, domJsonArray);
 
         // 暂时假定测试都是成功的
         return true;
