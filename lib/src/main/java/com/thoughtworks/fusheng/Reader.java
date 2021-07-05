@@ -31,7 +31,7 @@ public class Reader {
   }
 
   static public String getSpecFilePath(String fixtureFileName) {
-    return "template/" + fixtureFileName.replace(".java", ".html");
+    return "template/" + fixtureFileName + ".html";
   }
 
   public static String getSpecByFixture(String fixtureFileName) {
