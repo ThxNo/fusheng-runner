@@ -1,7 +1,6 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,8 @@ class UpdaterTest {
 
   @Test
   void should_get_correct_result_when_fill_assert_failed_context_content_to_dom_json_given_dom_json_and_context() {
-    JSONArray domJsonArray = JSON.parseArray("[{\n" +
+    JSONObject domJson = new JSONObject();
+    domJson.put("0", JSONObject.parseObject("{\n" +
             "    \"type\": \"tag\",\n" +
             "    \"name\": \"p\",\n" +
             "    \"attrs\": {\n" +
@@ -84,8 +84,9 @@ class UpdaterTest {
             "            ]\n" +
             "        }\n" +
             "    ]\n" +
-            "}]");
-    JSONArray expected = JSON.parseArray("[{\n" +
+            "}"));
+    JSONObject expected = new JSONObject();
+    expected.put("0", JSONObject.parseObject("{\n" +
             "    \"type\": \"tag\",\n" +
             "    \"name\": \"p\",\n" +
             "    \"attrs\": {\n" +
@@ -134,15 +135,16 @@ class UpdaterTest {
             "            ]\n" +
             "        }\n" +
             "    ]\n" +
-            "}]");
-    JSONArray actual = Updater.update(context, domJsonArray);
+            "}"));
+    JSONObject actual = Updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }
 
   @Test
   void should_get_correct_result_when_fill_assert_failed_context_content_to_dom_json_given_nested_dom_json_and_context() {
-    JSONArray domJsonArray = JSON.parseArray("[{\n" +
+    JSONObject domJson = new JSONObject();
+    domJson.put("0", JSONObject.parseObject("{\n" +
             "  \"type\": \"tag\",\n" +
             "  \"name\": \"p\",\n" +
             "  \"attrs\": {\n" +
@@ -201,8 +203,9 @@ class UpdaterTest {
             "      ]\n" +
             "    }\n" +
             "  ]\n" +
-            "}]");
-    JSONArray expected = JSON.parseArray("[{\n" +
+            "}"));
+    JSONObject expected = new JSONObject();
+    expected.put("0", JSONObject.parseObject("{\n" +
             "  \"type\": \"tag\",\n" +
             "  \"name\": \"p\",\n" +
             "  \"attrs\": {\n" +
@@ -261,8 +264,8 @@ class UpdaterTest {
             "      ]\n" +
             "    }\n" +
             "  ]\n" +
-            "}]");
-    JSONArray actual = Updater.update(context, domJsonArray);
+            "}"));
+    JSONObject actual = Updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }

@@ -1,6 +1,5 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class RunnerFacadeImpl implements RunnerFacade {
     private final RunnerResource runnerResource;
-    private final JSONArray domJsonArray;
+    private final JSONObject domJson;
     private Map<String, Object> symbols;
 
     public RunnerFacadeImpl(Class<?> fixtureClass) {
@@ -22,7 +21,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
         Map<String, Object> jsCodeAndDomJSON = new ParserAdapter("javascript").getJSCodeAndDomJSON(spec);
         Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
         JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
-        domJsonArray = (JSONArray) jsCodeAndDomJSON.get("domJson");
+        domJson = new JSONObject((Map<String, Object>) jsCodeAndDomJSON.get("domJSON")) ;
         List<ExampleResource> exampleResources = jsonJSCode.keySet().stream()
                                                            .map(key -> new ExampleResource(key, jsonJSCode.get(key).toString()))
                                                            .collect(Collectors.toList());
@@ -50,7 +49,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
                                        .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
                                        .forEach(exampleResource -> {
                                            Context context = executor.exec(symbols, exampleResource.getJsCodes());
-                                           Updater.update(context, domJsonArray);
+                                           Updater.update(context, domJson);
                                        });
         // 暂时假定测试都是成功的
         return true;
