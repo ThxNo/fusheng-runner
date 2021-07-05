@@ -31,17 +31,14 @@ public class FuShengTestEngine implements TestEngine {
         for (TestDescriptor fixtureDescriptor : engineDescriptor.getChildren()) {
 
             listener.executionStarted(fixtureDescriptor);
-            RunnerFacade runnerFacade = RunnerFacadeImpl.of(fixtureDescriptor.getDisplayName());
-
-            for (TestDescriptor testDescriptor : fixtureDescriptor.getChildren()) {
-                listener.executionStarted(testDescriptor);
-
-                // TODO: testDescriptor 是spec中的每个example
-
-                if (runnerFacade.run(testDescriptor.getDisplayName())) {
-                    listener.executionFinished(testDescriptor, TestExecutionResult.successful());
+            RunnerFacade runnerFacade = ((FuShengFixtureDescriptor) fixtureDescriptor).getRunnerFacade();
+            for (TestDescriptor exampleDescriptor : fixtureDescriptor.getChildren()) {
+                listener.executionStarted(exampleDescriptor);
+                String exampleName = ((FuShengExampleDescriptor) exampleDescriptor).getExampleName();
+                if (runnerFacade.run(exampleName)) {
+                    listener.executionFinished(exampleDescriptor, TestExecutionResult.successful());
                 } else {
-                    listener.executionFinished(testDescriptor, TestExecutionResult.failed(new ExampleFailedException("")));
+                    listener.executionFinished(exampleDescriptor, TestExecutionResult.failed(new ExampleFailedException("")));
                 }
             }
 

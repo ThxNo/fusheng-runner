@@ -10,14 +10,12 @@
 
 package com.thoughtworks.fusheng.integration.junit5;
 
-import org.junit.platform.commons.JUnitException;
+import com.thoughtworks.fusheng.RunnerFacade;
+import com.thoughtworks.fusheng.RunnerFacadeImpl;
 import org.junit.platform.commons.util.ClassFilter;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 import java.util.Collections;
@@ -41,12 +39,12 @@ class FixtureSelectorResolver implements SelectorResolver {
 		if (!classFilter.test(testClass)) {
 			return unresolved();
 		}
-		FuShengRunner runner = new FuShengRunner(testClass);
+		RunnerFacade runner = new RunnerFacadeImpl(testClass);
 		return context.addToParent(parent -> Optional.of(createRunnerTestDescriptor(parent, testClass, runner))).map(
 			runnerTestDescriptor -> Match.exact(runnerTestDescriptor, Collections::emptySet)).map(Resolution::match).orElse(unresolved());
 	}
 
-	private FuShengFixtureDescriptor createRunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, FuShengRunner runner) {
+	private FuShengFixtureDescriptor createRunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, RunnerFacade runner) {
 		UniqueId uniqueId = parent.getUniqueId().append(FuShengTestDescriptor.SEGMENT_TYPE_FIXTURE, testClass.getName());
 		return new FuShengFixtureDescriptor(uniqueId, testClass, runner);
 	}

@@ -5,55 +5,53 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
-import com.thoughtworks.fusheng.exception.FixtureNotFoundException;
-import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.joining;
-
-@RequiredArgsConstructor(staticName = "of")
 public class RunnerFacadeImpl implements RunnerFacade {
+    private final RunnerResource runnerResource;
+    private final JSONArray domJsonArray;
+    private Map<String, Object> symbols;
 
-    private final String fixtureClassName;
-    private final ParserAdapter parserAdapter = new ParserAdapter("javascript");
+    public RunnerFacadeImpl(Class<?> fixtureClass) {
+        symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
 
-    private static Object getFixtureInstance(String fixtureClassName) {
+        String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
+        Map<String, Object> jsCodeAndDomJSON = new ParserAdapter("javascript").getJSCodeAndDomJSON(spec);
+        Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
+        JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
+        domJsonArray = (JSONArray) jsCodeAndDomJSON.get("domJson");
+        List<ExampleResource> exampleResources = jsonJSCode.keySet().stream()
+                                                           .map(key -> new ExampleResource(key, jsonJSCode.get(key).toString()))
+                                                           .collect(Collectors.toList());
+        runnerResource = new RunnerResource(exampleResources);
+    }
+
+    private static Object getFixtureInstance(Class<?> fixtureClass) {
         try {
-            return Class.forName(fixtureClassName).newInstance();
-        } catch (ClassNotFoundException e) {
-            throw new FixtureNotFoundException(String.format("fixture %s not found", fixtureClassName), e);
+            return fixtureClass.newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
-            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClassName), e);
+            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClass.getName()), e);
         }
     }
 
-    private String getFixturePathByClassName(String fixtureClassName) {
-        return null;
+    @Override
+    public RunnerResource getRunnerResource() {
+        return runnerResource;
     }
 
     @Override
-    public Boolean run(String testName) {
-        Object fixtureInstance = getFixtureInstance(fixtureClassName);
+    public Boolean run(String exampleName) {
         Executor executor = ExecutorFactory.getJsExecutor();
-
-        Map<String, Object> symbols = ImmutableMap.of("fixture", fixtureInstance);
-
-        String spec = Reader.getSpecByFixture(getFixturePathByClassName(fixtureClassName));
-        Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
-
-        Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
-
-        // TODO: 暂时将所有 example 的代码拼接到一起，后续可考虑分开
-        JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
-        String jsCode = jsonJSCode.keySet().stream().map(key -> jsonJSCode.get(key).toString()).collect(joining("\n"));
-
-        Context context = executor.exec(symbols, jsCode);
-
-        JSONArray domJsonArray = (JSONArray) jsCodeAndDomJSON.get("domJson");
-
-        Updater.update(context, domJsonArray);
-
+        RunnerResource runnerResource = getRunnerResource();
+        runnerResource.exampleResources.stream()
+                                       .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
+                                       .forEach(exampleResource -> {
+                                           Context context = executor.exec(symbols, exampleResource.getJsCodes());
+                                           Updater.update(context, domJsonArray);
+                                       });
         // 暂时假定测试都是成功的
         return true;
     }

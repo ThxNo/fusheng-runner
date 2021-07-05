@@ -1,6 +1,6 @@
 package com.thoughtworks.fusheng.integration.junit5;
 
-import com.thoughtworks.fusheng.Reader;
+import com.thoughtworks.fusheng.RunnerFacade;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -19,15 +19,13 @@ public class FuShengFixtureDescriptorPostProcessor {
         if (!parent.getSource().isPresent()) {
             throw new RuntimeException("No source found");
         }
-        ClassSource classSource = (ClassSource) parent.getSource().get();
-        List<MethodSource> methodSources = findMethodSource(classSource);
-        //TODO: 创建Example的描述器
-        methodSources.forEach(methodSource -> {
-            // 调用 Reader 检查同名 spec 文件是否存在
-            Reader.validatePath(methodSource.getJavaClass().getSimpleName());
-            UniqueId id = parent.getUniqueId().append(FuShengTestDescriptor.SEGMENT_TYPE_EXAMPLE, methodSource.getMethodName());
-            parent.addChild(new FuShengTestDescriptor(id, methodSource.getMethodName(), classSource));
-        });
+        final RunnerFacade runnerFacade = parent.getRunnerFacade();
+        runnerFacade.getRunnerResource().getExampleResources().forEach(
+                exampleResource -> {
+                    UniqueId id = parent.getUniqueId().append(FuShengTestDescriptor.SEGMENT_TYPE_EXAMPLE, exampleResource.getExampleName());
+                    parent.addChild(new FuShengExampleDescriptor(id, exampleResource.getExampleName(), exampleResource.getExampleName(), parent.getSource().get()));
+                }
+        );
     }
 
     public List<MethodSource> findMethodSource(ClassSource classSource) {
