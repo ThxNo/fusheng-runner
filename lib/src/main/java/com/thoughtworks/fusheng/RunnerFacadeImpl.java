@@ -12,13 +12,15 @@ import java.util.stream.Collectors;
 public class RunnerFacadeImpl implements RunnerFacade {
     private final RunnerResource runnerResource;
     private final JSONObject domJson;
+    private final ParserAdapter parserAdapter;
     private Map<String, Object> symbols;
 
     public RunnerFacadeImpl(Class<?> fixtureClass) {
         symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
+        parserAdapter = new ParserAdapter("javascript");
 
         String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
-        Map<String, Object> jsCodeAndDomJSON = new ParserAdapter("javascript").getJSCodeAndDomJSON(spec);
+        Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
         Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
         JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
         domJson = new JSONObject((Map<String, Object>) jsCodeAndDomJSON.get("domJSON")) ;
@@ -49,7 +51,9 @@ public class RunnerFacadeImpl implements RunnerFacade {
                                        .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
                                        .forEach(exampleResource -> {
                                            Context context = executor.exec(symbols, exampleResource.getJsCodes());
-                                           Updater.update(context, domJson);
+                                           JSONObject updatedDomJSON = Updater.update(context, domJson);
+                                           String html = parserAdapter.transformDomJSONToHtml(updatedDomJSON);
+                                           // 保存 html 到指定目录的文件中，需要和 server 约定好
                                        });
         // 暂时假定测试都是成功的
         return true;
