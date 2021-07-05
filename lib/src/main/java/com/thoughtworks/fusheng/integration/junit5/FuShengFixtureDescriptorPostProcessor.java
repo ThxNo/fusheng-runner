@@ -24,8 +24,7 @@ public class FuShengFixtureDescriptorPostProcessor {
         //TODO: 创建Example的描述器
         methodSources.forEach(methodSource -> {
             // 调用 Reader 检查同名 spec 文件是否存在
-            String[] classname = methodSource.getClassName().split("\\.");
-            Reader.read(classname[classname.length - 1]);
+            Reader.validatePath(methodSource.getJavaClass().getSimpleName());
             UniqueId id = parent.getUniqueId().append(FuShengTestDescriptor.SEGMENT_TYPE_EXAMPLE, methodSource.getMethodName());
             parent.addChild(new FuShengTestDescriptor(id, methodSource.getMethodName(), classSource));
         });

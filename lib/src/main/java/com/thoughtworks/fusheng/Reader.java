@@ -24,6 +24,12 @@ public class Reader {
     }
   }
 
+  static public void validatePath(String path) {
+    Optional.ofNullable(Reader.class.getClassLoader().getResource(path))
+            .map(URL::getPath)
+            .orElseThrow(() -> new ReaderException("No such file: " + path));
+  }
+
   static public String getSpecFilePath(String fixtureFileName) {
     return "template/" + fixtureFileName.replace(".java", ".html");
   }
