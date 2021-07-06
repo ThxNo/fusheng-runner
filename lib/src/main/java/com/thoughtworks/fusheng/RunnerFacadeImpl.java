@@ -47,11 +47,12 @@ public class RunnerFacadeImpl implements RunnerFacade {
     public Boolean run(String exampleName) {
         Executor executor = ExecutorFactory.getJsExecutor();
         RunnerResource runnerResource = getRunnerResource();
+        Updater updater = new Updater(new DomVisitor());
         runnerResource.exampleResources.stream()
                                        .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
                                        .forEach(exampleResource -> {
                                            Context context = executor.exec(symbols, exampleResource.getJsCodes());
-                                           JSONObject updatedDomJSON = Updater.update(context, domJson);
+                                           JSONObject updatedDomJSON = updater.update(context, domJson);
                                            String html = parserAdapter.transformDomJSONToHtml(updatedDomJSON);
                                            // 保存 html 到指定目录的文件中，需要和 server 约定好
                                        });

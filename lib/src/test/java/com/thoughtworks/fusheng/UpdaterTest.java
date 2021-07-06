@@ -136,7 +136,8 @@ class UpdaterTest {
             "        }\n" +
             "    }\n" +
             "}"));
-    JSONObject actual = Updater.update(context, domJson);
+    Updater updater = new Updater(new DomVisitor());
+    JSONObject actual = updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }
@@ -265,7 +266,8 @@ class UpdaterTest {
             "    }\n" +
             "  }\n" +
             "}"));
-    JSONObject actual = Updater.update(context, domJson);
+    Updater updater = new Updater(new DomVisitor());
+    JSONObject actual = updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }
