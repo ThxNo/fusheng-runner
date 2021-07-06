@@ -1,6 +1,5 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.fusheng.Executor.Context;
 
@@ -14,7 +13,7 @@ public class Updater {
 
     domJson.keySet().forEach(key -> {
       JSONObject jsonObject = domJson.getJSONObject(key);
-      JSONArray children = getChildren(jsonObject);
+      JSONObject children = getChildren(jsonObject);
 
       entries.forEach(entry -> {
         String uuid = entry.getKey();
@@ -25,31 +24,30 @@ public class Updater {
     return domJson;
   }
 
-  private static void handleDomJson(Context context, JSONArray children, String uuid) {
-    for (int i = 0; i < children.size(); i++) {
-      JSONObject child = children.getJSONObject(i);
+  private static void handleDomJson(Context context, JSONObject children, String uuid) {
+    children.keySet().forEach(key -> {
+      JSONObject child = children.getJSONObject(key);
       JSONObject attrs = getAttrs(child);
-      JSONArray innerChildren = getChildren(child);
+      JSONObject innerChildren = getChildren(child);
 
       if (attrs != null) {
         Object assertionId = attrs.getInnerMap().get("assertion-id");
         if (Objects.equals(assertionId, uuid)) {
-          for (int j = 0; j < innerChildren.size(); j++) {
-            JSONObject childObject = innerChildren.getJSONObject(j);
+          innerChildren.keySet().forEach(innerKey -> {
+            JSONObject childObject = innerChildren.getJSONObject(innerKey);
             JSONObject innerAttrs = getAttrs(childObject);
             updateDomJson(context, uuid, childObject, innerAttrs);
-          }
-          break;
+          });
         }
       }
       if (innerChildren != null) {
         handleDomJson(context, innerChildren, uuid);
       }
-    }
+    });
   }
 
-  private static JSONArray getChildren(JSONObject domJson) {
-    return domJson.getJSONArray("children");
+  private static JSONObject getChildren(JSONObject domJson) {
+    return domJson.getJSONObject("children");
   }
 
   private static JSONObject getAttrs(JSONObject jsonObject) {
@@ -82,7 +80,7 @@ public class Updater {
     }
 
     Map<String, Object> childInnerMap = attrs.getInnerMap();
-    JSONObject childDom = getChildren(childObject).getJSONObject(0);
+    JSONObject childDom = getChildren(childObject).getJSONObject("0");
     if (isIncludeSpecifiedClass(childInnerMap, "assert-expect")) {
       updateSpecifiedDomJson(context, uuid, childDom, childInnerMap, "expect");
     }

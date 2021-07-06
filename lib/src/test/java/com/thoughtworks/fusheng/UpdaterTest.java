@@ -42,48 +42,48 @@ class UpdaterTest {
             "        \"class\": \"example\",\"context-id\":\"uuid1\"\n" +
             "    },\n" +
             "    \"voidElement\": false,\n" +
-            "    \"children\": [\n" +
-            "        {\n" +
+            "    \"children\": {\n" +
+            "       \"0\": {\n" +
             "            \"type\": \"text\",\n" +
             "            \"content\": \"pot为\"\n" +
             "        },\n" +
-            "        {\n" +
+            "       \"1\": {\n" +
             "            \"type\": \"tag\",\n" +
             "            \"name\": \"span\",\n" +
             "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"assertion-id\":\"uuid2\"},\n" +
             "            \"voidElement\": false,\n" +
-            "            \"children\": [\n" +
-            "                {\n" +
+            "            \"children\": {\n" +
+            "               \"0\": {\n" +
             "                    \"type\": \"text\",\n" +
             "                    \"content\": \"得到描述为\"\n" +
             "                },\n" +
-            "                {\n" +
+            "               \"1\": {\n" +
             "                    \"type\": \"tag\",\n" +
             "                    \"name\": \"span\",\n" +
             "                    \"attrs\": {\"class\":\"assert-expect\"},\n" +
             "                    \"voidElement\": false,\n" +
-            "                    \"children\": [\n" +
-            "                        {\n" +
+            "                    \"children\": {\n" +
+            "                       \"0\": {\n" +
             "                            \"type\": \"text\",\n" +
             "                            \"content\": 1\n" +
             "                        }\n" +
-            "                    ]\n" +
+            "                    }\n" +
             "                },\n" +
-            "                {\n" +
+            "               \"2\": {\n" +
             "                    \"type\": \"tag\",\n" +
             "                    \"name\": \"span\",\n" +
             "                    \"attrs\": {\"class\":\"assert-actual\"},\n" +
             "                    \"voidElement\": false,\n" +
-            "                    \"children\": [\n" +
-            "                        {\n" +
+            "                    \"children\": {\n" +
+            "                       \"0\": {\n" +
             "                            \"type\": \"text\",\n" +
             "                            \"content\": \"\"\n" +
             "                        }\n" +
-            "                    ]\n" +
+            "                    }\n" +
             "                }\n" +
-            "            ]\n" +
+            "            }\n" +
             "        }\n" +
-            "    ]\n" +
+            "    }\n" +
             "}"));
     JSONObject expected = new JSONObject();
     expected.put("0", JSONObject.parseObject("{\n" +
@@ -93,48 +93,48 @@ class UpdaterTest {
             "        \"class\": \"example\",\"context-id\":\"uuid1\"\n" +
             "    },\n" +
             "    \"voidElement\": false,\n" +
-            "    \"children\": [\n" +
-            "        {\n" +
+            "    \"children\": {\n" +
+            "       \"0\": {\n" +
             "            \"type\": \"text\",\n" +
             "            \"content\": \"pot为\"\n" +
             "        },\n" +
-            "        {\n" +
+            "       \"1\": {\n" +
             "            \"type\": \"tag\",\n" +
             "            \"name\": \"span\",\n" +
             "            \"attrs\": {\"class\":\"assertion\",\"data-expect\":\"equal\",\"data-action\":\"getPot\",\"assertion-id\":\"uuid2\"},\n" +
             "            \"voidElement\": false,\n" +
-            "            \"children\": [\n" +
-            "                {\n" +
+            "            \"children\": {\n" +
+            "               \"0\": {\n" +
             "                    \"type\": \"text\",\n" +
             "                    \"content\": \"得到描述为\"\n" +
             "                },\n" +
-            "                {\n" +
+            "               \"1\": {\n" +
             "                    \"type\": \"tag\",\n" +
             "                    \"name\": \"span\",\n" +
             "                    \"attrs\": {\"class\":\"assert-expect error\"},\n" +
             "                    \"voidElement\": false,\n" +
-            "                    \"children\": [\n" +
-            "                        {\n" +
+            "                    \"children\": {\n" +
+            "                       \"0\": {\n" +
             "                            \"type\": \"text\",\n" +
             "                            \"content\": 1\n" +
             "                        }\n" +
-            "                    ]\n" +
+            "                    }\n" +
             "                },\n" +
-            "                {\n" +
+            "               \"2\": {\n" +
             "                    \"type\": \"tag\",\n" +
             "                    \"name\": \"span\",\n" +
             "                    \"attrs\": {\"class\":\"assert-actual visible\"},\n" +
             "                    \"voidElement\": false,\n" +
-            "                    \"children\": [\n" +
-            "                        {\n" +
+            "                    \"children\": {\n" +
+            "                       \"0\": {\n" +
             "                            \"type\": \"text\",\n" +
             "                            \"content\": 3\n" +
             "                        }\n" +
-            "                    ]\n" +
+            "                    }\n" +
             "                }\n" +
-            "            ]\n" +
+            "            }\n" +
             "        }\n" +
-            "    ]\n" +
+            "    }\n" +
             "}"));
     JSONObject actual = Updater.update(context, domJson);
 
@@ -152,15 +152,15 @@ class UpdaterTest {
             "    \"context-id\": \"uuid1\"\n" +
             "  },\n" +
             "  \"voidElement\": false,\n" +
-            "  \"children\": [{\n" +
+            "  \"children\": {\"0\": {\n" +
             "      \"type\": \"text\",\n" +
             "      \"content\": \"pot为\"\n" +
             "    },\n" +
-            "    {\n" +
+            "   \"1\": {\n" +
             "      \"type\": \"tag\",\n" +
             "      \"name\": \"p\",\n" +
-            "      \"children\": [\n" +
-            "        {\n" +
+            "      \"children\": {\n" +
+            "       \"0\": {\n" +
             "          \"type\": \"tag\",\n" +
             "          \"name\": \"span\",\n" +
             "          \"attrs\": {\n" +
@@ -170,39 +170,39 @@ class UpdaterTest {
             "            \"assertion-id\": \"uuid2\"\n" +
             "          },\n" +
             "          \"voidElement\": false,\n" +
-            "          \"children\": [{\n" +
+            "          \"children\": { \"0\": {\n" +
             "              \"type\": \"text\",\n" +
             "              \"content\": \"得到描述为\"\n" +
             "            },\n" +
-            "            {\n" +
+            "           \"1\": {\n" +
             "              \"type\": \"tag\",\n" +
             "              \"name\": \"span\",\n" +
             "              \"attrs\": {\n" +
             "                \"class\": \"assert-expect\"\n" +
             "              },\n" +
             "              \"voidElement\": false,\n" +
-            "              \"children\": [{\n" +
+            "              \"children\": { \"0\": {\n" +
             "                \"type\": \"text\",\n" +
             "                \"content\": 1\n" +
-            "              }]\n" +
+            "              }}\n" +
             "            },\n" +
-            "            {\n" +
+            "           \"2\": {\n" +
             "              \"type\": \"tag\",\n" +
             "              \"name\": \"span\",\n" +
             "              \"attrs\": {\n" +
             "                \"class\": \"assert-actual\"\n" +
             "              },\n" +
             "              \"voidElement\": false,\n" +
-            "              \"children\": [{\n" +
+            "              \"children\": { \"0\": {\n" +
             "                \"type\": \"text\",\n" +
             "                \"content\": \"\"\n" +
-            "              }]\n" +
+            "              }}\n" +
             "            }\n" +
-            "          ]\n" +
+            "          }\n" +
             "        }\n" +
-            "      ]\n" +
+            "      }\n" +
             "    }\n" +
-            "  ]\n" +
+            "  }\n" +
             "}"));
     JSONObject expected = new JSONObject();
     expected.put("0", JSONObject.parseObject("{\n" +
@@ -213,15 +213,15 @@ class UpdaterTest {
             "    \"context-id\": \"uuid1\"\n" +
             "  },\n" +
             "  \"voidElement\": false,\n" +
-            "  \"children\": [{\n" +
+            "  \"children\": { \"0\": {\n" +
             "      \"type\": \"text\",\n" +
             "      \"content\": \"pot为\"\n" +
             "    },\n" +
-            "    {\n" +
+            "   \"1\": {\n" +
             "      \"type\": \"tag\",\n" +
             "      \"name\": \"p\",\n" +
-            "      \"children\": [\n" +
-            "        {\n" +
+            "      \"children\": {\n" +
+            "       \"0\": {\n" +
             "          \"type\": \"tag\",\n" +
             "          \"name\": \"span\",\n" +
             "          \"attrs\": {\n" +
@@ -231,39 +231,39 @@ class UpdaterTest {
             "            \"assertion-id\": \"uuid2\"\n" +
             "          },\n" +
             "          \"voidElement\": false,\n" +
-            "          \"children\": [{\n" +
+            "          \"children\": { \"0\": {\n" +
             "              \"type\": \"text\",\n" +
             "              \"content\": \"得到描述为\"\n" +
             "            },\n" +
-            "            {\n" +
+            "           \"1\": {\n" +
             "              \"type\": \"tag\",\n" +
             "              \"name\": \"span\",\n" +
             "              \"attrs\": {\n" +
             "                \"class\": \"assert-expect error\"\n" +
             "              },\n" +
             "              \"voidElement\": false,\n" +
-            "              \"children\": [{\n" +
+            "              \"children\": { \"0\": {\n" +
             "                \"type\": \"text\",\n" +
             "                \"content\": 1\n" +
-            "              }]\n" +
+            "              }}\n" +
             "            },\n" +
-            "            {\n" +
+            "           \"2\": {\n" +
             "              \"type\": \"tag\",\n" +
             "              \"name\": \"span\",\n" +
             "              \"attrs\": {\n" +
             "                \"class\": \"assert-actual visible\"\n" +
             "              },\n" +
             "              \"voidElement\": false,\n" +
-            "              \"children\": [{\n" +
+            "              \"children\": { \"0\": {\n" +
             "                \"type\": \"text\",\n" +
             "                \"content\": 3\n" +
-            "              }]\n" +
+            "              }}\n" +
             "            }\n" +
-            "          ]\n" +
+            "          }\n" +
             "        }\n" +
-            "      ]\n" +
+            "      }\n" +
             "    }\n" +
-            "  ]\n" +
+            "  }\n" +
             "}"));
     JSONObject actual = Updater.update(context, domJson);
 
