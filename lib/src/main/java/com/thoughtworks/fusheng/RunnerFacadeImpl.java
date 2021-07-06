@@ -4,18 +4,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.Executor.Context;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
+import com.thoughtworks.fusheng.exception.SaverException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RunnerFacadeImpl implements RunnerFacade {
     private final RunnerResource runnerResource;
-    private final JSONObject domJson;
+    private JSONObject domJson;
     private final ParserAdapter parserAdapter;
     private Map<String, Object> symbols;
+    private Class<?> fixtureClass;
 
     public RunnerFacadeImpl(Class<?> fixtureClass) {
+        this.fixtureClass = fixtureClass;
+
         symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
         parserAdapter = new ParserAdapter("javascript");
 
@@ -52,11 +60,22 @@ public class RunnerFacadeImpl implements RunnerFacade {
                                        .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
                                        .forEach(exampleResource -> {
                                            Context context = executor.exec(symbols, exampleResource.getJsCodes());
-                                           JSONObject updatedDomJSON = updater.update(context, domJson);
-                                           String html = parserAdapter.transformDomJSONToHtml(updatedDomJSON);
-                                           // 保存 html 到指定目录的文件中，需要和 server 约定好
+                                           domJson = updater.update(context, domJson);
                                        });
         // 暂时假定测试都是成功的
         return true;
+    }
+
+    @Override
+    public void saveDomJSONToFile() {
+        //TODO: 后续考虑处理多个 fixture 重名的情况
+        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "spec", fixtureClass.getSimpleName() + ".html");
+
+        try {
+            String html = parserAdapter.transformDomJSONToHtml(domJson);
+            Files.writeString(path, html);
+        } catch (IOException e) {
+            throw new SaverException(String.format("Save spec failed: %s", path), e);
+        }
     }
 }

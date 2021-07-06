@@ -1,6 +1,5 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

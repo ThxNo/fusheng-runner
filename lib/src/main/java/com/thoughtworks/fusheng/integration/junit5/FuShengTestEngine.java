@@ -1,7 +1,6 @@
 package com.thoughtworks.fusheng.integration.junit5;
 
 import com.thoughtworks.fusheng.RunnerFacade;
-import com.thoughtworks.fusheng.RunnerFacadeImpl;
 import com.thoughtworks.fusheng.exception.ExampleFailedException;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -41,6 +40,7 @@ public class FuShengTestEngine implements TestEngine {
                     listener.executionFinished(exampleDescriptor, TestExecutionResult.failed(new ExampleFailedException("")));
                 }
             }
+            runnerFacade.saveDomJSONToFile();
 
             listener.executionFinished(fixtureDescriptor, TestExecutionResult.successful());
         }
