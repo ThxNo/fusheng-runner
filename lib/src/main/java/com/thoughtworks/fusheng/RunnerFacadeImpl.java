@@ -78,7 +78,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
                 Files.createDirectories(folder);
             }
             String html = parserAdapter.transformDomJSONToHtml(domJson);
-            Files.writeString(path, html, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.writeString(path, html, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new SaverException(String.format("Save spec failed: %s", path), e);
         }
