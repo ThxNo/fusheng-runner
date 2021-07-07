@@ -8,10 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.discovery;
 
 import com.thoughtworks.fusheng.RunnerFacade;
 import com.thoughtworks.fusheng.RunnerFacadeImpl;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengFixtureDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengTestDescriptor;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;

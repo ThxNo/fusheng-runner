@@ -1,4 +1,7 @@
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.discovery;
+
+import com.thoughtworks.fusheng.integration.junit5.FuShengTest;
+import org.junit.platform.commons.util.AnnotationUtils;
 
 import java.util.function.Predicate;
 
@@ -20,6 +23,6 @@ public class IsPotentialFuShengTestClass implements Predicate<Class<?>> {
         if (isInnerClass(candidate)) {
             return false;
         }
-        return isAnnotated(candidate, FuShengTest.class);
+        return AnnotationUtils.isAnnotated(candidate, FuShengTest.class);
     }
 }

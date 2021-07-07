@@ -2,6 +2,9 @@ package com.thoughtworks.fusheng.integration.junit5;
 
 import com.thoughtworks.fusheng.RunnerFacade;
 import com.thoughtworks.fusheng.exception.ExampleFailedException;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengExampleDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengFixtureDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.discovery.FuShengDiscoverySelectorResolver;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;

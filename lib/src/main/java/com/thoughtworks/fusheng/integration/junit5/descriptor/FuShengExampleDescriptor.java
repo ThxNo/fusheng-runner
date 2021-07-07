@@ -1,4 +1,4 @@
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.descriptor;
 
 import lombok.Getter;
 import org.junit.platform.engine.TestSource;

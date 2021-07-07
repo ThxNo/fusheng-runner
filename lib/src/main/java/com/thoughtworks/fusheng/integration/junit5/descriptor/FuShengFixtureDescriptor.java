@@ -1,4 +1,4 @@
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.descriptor;
 
 import com.thoughtworks.fusheng.RunnerFacade;
 import lombok.Getter;

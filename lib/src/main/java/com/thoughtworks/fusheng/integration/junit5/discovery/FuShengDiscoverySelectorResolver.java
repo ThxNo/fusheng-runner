@@ -1,5 +1,7 @@
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.discovery;
 
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengEngineDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengFixtureDescriptor;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;

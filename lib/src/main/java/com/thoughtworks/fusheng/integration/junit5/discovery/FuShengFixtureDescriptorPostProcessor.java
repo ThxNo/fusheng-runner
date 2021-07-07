@@ -1,6 +1,9 @@
-package com.thoughtworks.fusheng.integration.junit5;
+package com.thoughtworks.fusheng.integration.junit5.discovery;
 
 import com.thoughtworks.fusheng.RunnerFacade;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengExampleDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengFixtureDescriptor;
+import com.thoughtworks.fusheng.integration.junit5.descriptor.FuShengTestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
