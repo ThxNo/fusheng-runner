@@ -30,8 +30,4 @@ public class FuShengFixtureDescriptorPostProcessor {
                 }
         );
     }
-
-    public List<MethodSource> findMethodSource(ClassSource classSource) {
-        return Stream.of(classSource.getJavaClass().getDeclaredMethods()).map(MethodSource::from).collect(toList());
-    }
 }
