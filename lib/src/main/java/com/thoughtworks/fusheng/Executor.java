@@ -31,6 +31,7 @@ public class Executor {
         }
 
         public <T> T getContext(String jsonPath) {
+            jsonPath = jsonPath.replaceAll("-", "\\\\-");
             if (context == null) {
                 context = new JSONObject(get(CONTEXT_FIELD_NAME));
             }
