@@ -6,6 +6,8 @@ import com.thoughtworks.fusheng.Executor.Context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdaterTest {
@@ -137,7 +139,7 @@ class UpdaterTest {
             "    }\n" +
             "}"));
     Updater updater = new Updater(new DomVisitor());
-    JSONObject actual = updater.update(context, domJson);
+    Map<String, Object> actual = updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }
@@ -267,7 +269,7 @@ class UpdaterTest {
             "  }\n" +
             "}"));
     Updater updater = new Updater(new DomVisitor());
-    JSONObject actual = updater.update(context, domJson);
+    Map<String, Object> actual = updater.update(context, domJson);
 
     assertEquals(expected, actual);
   }

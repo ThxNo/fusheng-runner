@@ -1,20 +1,18 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.Map;
 
 public class DomHelper {
-  public static JSONObject getChildren(JSONObject dom) {
-    return dom.getJSONObject("children");
+  public static Map<String, Object> getChildren(Map<String, Object> dom) {
+    return (Map<String, Object>)dom.get("children");
   }
 
-  public static JSONObject getAttrs(JSONObject dom) {
-    return dom.getObject("attrs", JSONObject.class);
+  public static Map<String, Object> getAttrs(Map<String, Object> dom) {
+    return (Map<String, Object>)dom.get("attrs");
   }
 
-  public static void updateContent(JSONObject child, Object value) {
-    child.getInnerMap().put("content", value);
+  public static void updateContent(Map<String, Object> child, Object value) {
+    child.put("content", value);
   }
 
   public static void updateClass(Map<String, Object> attrs, String classnames) {

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class RunnerFacadeImpl implements RunnerFacade {
     private final RunnerResource runnerResource;
-    private JSONObject domJson;
+    private Map<String, Object> domJson;
     private final ParserAdapter parserAdapter;
     private Map<String, Object> symbols;
     private Class<?> fixtureClass;
@@ -32,7 +32,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
         Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
         Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
         JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
-        domJson = new JSONObject((Map<String, Object>) jsCodeAndDomJSON.get("domJSON")) ;
+        domJson = (Map<String, Object>) jsCodeAndDomJSON.get("domJSON");
         List<ExampleResource> exampleResources = jsonJSCode.keySet().stream()
                                                            .map(key -> new ExampleResource(key, jsonJSCode.get(key).toString()))
                                                            .collect(Collectors.toList());

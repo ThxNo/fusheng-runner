@@ -2,8 +2,8 @@ package com.thoughtworks.fusheng;
 
 import com.thoughtworks.fusheng.Executor.Context;
 
-import com.alibaba.fastjson.JSONObject;
+import java.util.Map;
 
 public interface Visitor {
-  public void handle(Context context, JSONObject children, String uuid);
+  public void handle(Context context, Map<String, Object> children, String uuid);
 }

@@ -13,12 +13,12 @@ public class Updater {
     this.visitor = visitor;
   }
 
-  public JSONObject update(Context context, JSONObject domJson) {
+  public Map<String, Object> update(Context context, Map<String, Object> domJson) {
     Set<Map.Entry<String, Object>> entries = context.<JSONObject>getContext("$").entrySet();
 
     domJson.keySet().forEach(key -> {
-      JSONObject dom = domJson.getJSONObject(key);
-      JSONObject children = DomHelper.getChildren(dom);
+      Map<String, Object> dom = (Map<String, Object>)domJson.get(key);
+      Map<String, Object> children = DomHelper.getChildren(dom);
 
       entries.forEach(entry -> {
         visitor.handle(context, children, entry.getKey());
