@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -72,8 +73,12 @@ public class RunnerFacadeImpl implements RunnerFacade {
         Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "spec", fixtureClass.getSimpleName() + ".html");
 
         try {
+            Path folder = path.getParent();
+            if (!Files.exists(folder)) {
+                Files.createDirectories(folder);
+            }
             String html = parserAdapter.transformDomJSONToHtml(domJson);
-            Files.writeString(path, html);
+            Files.writeString(path, html, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
             throw new SaverException(String.format("Save spec failed: %s", path), e);
         }
