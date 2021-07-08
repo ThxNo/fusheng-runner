@@ -2,10 +2,11 @@ package com.thoughtworks.fusheng;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
-import com.thoughtworks.fusheng.Executor.Context;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
 import com.thoughtworks.fusheng.exception.SaverException;
-
+import com.thoughtworks.fusheng.executor.Executor;
+import com.thoughtworks.fusheng.executor.Executor.Context;
+import com.thoughtworks.fusheng.executor.ExecutorFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

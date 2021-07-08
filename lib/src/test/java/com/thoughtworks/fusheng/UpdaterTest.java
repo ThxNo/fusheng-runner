@@ -1,14 +1,14 @@
 package com.thoughtworks.fusheng;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
-import com.thoughtworks.fusheng.Executor.Context;
+import com.thoughtworks.fusheng.executor.Executor;
+import com.thoughtworks.fusheng.executor.Executor.Context;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdaterTest {
   Context context;

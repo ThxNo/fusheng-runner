@@ -1,17 +1,16 @@
-package com.thoughtworks.fusheng;
+package com.thoughtworks.fusheng.executor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
 import com.thoughtworks.fusheng.exception.ExecutorException;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
+import java.util.HashMap;
+import java.util.Map;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.HashMap;
-import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor(staticName = "of")
 public class Executor {

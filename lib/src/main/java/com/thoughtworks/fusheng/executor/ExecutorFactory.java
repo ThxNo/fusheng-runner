@@ -1,4 +1,4 @@
-package com.thoughtworks.fusheng;
+package com.thoughtworks.fusheng.executor;
 
 public class ExecutorFactory {
     public static Executor getExecutorByName(String scriptingName) {

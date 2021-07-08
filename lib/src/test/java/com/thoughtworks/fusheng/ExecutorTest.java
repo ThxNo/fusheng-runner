@@ -1,17 +1,18 @@
 package com.thoughtworks.fusheng;
 
-import com.google.common.collect.ImmutableMap;
-import com.thoughtworks.fusheng.Executor.Context;
-import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import com.google.common.collect.ImmutableMap;
+import com.thoughtworks.fusheng.executor.Executor;
+import com.thoughtworks.fusheng.executor.Executor.Context;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 class ExecutorTest {
 
     public static class MockedFixture {
+
         public int intField = 1;
 
         public int add(int lhs, int rhs) {

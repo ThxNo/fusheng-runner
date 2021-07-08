@@ -1,11 +1,14 @@
 package com.thoughtworks.fusheng;
 
-import com.thoughtworks.fusheng.Executor.Context;
+import static com.thoughtworks.fusheng.DomHelper.getAttrs;
+import static com.thoughtworks.fusheng.DomHelper.getChildren;
+import static com.thoughtworks.fusheng.DomHelper.isIncludeClass;
+import static com.thoughtworks.fusheng.DomHelper.updateClass;
+import static com.thoughtworks.fusheng.DomHelper.updateContent;
 
+import com.thoughtworks.fusheng.executor.Executor.Context;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.thoughtworks.fusheng.DomHelper.*;
 
 public class DomVisitor implements Visitor {
   @Override
