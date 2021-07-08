@@ -1,51 +1,49 @@
 package com.thoughtworks.fusheng;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
+import com.thoughtworks.fusheng.exception.ExecutorException;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
 import com.thoughtworks.fusheng.exception.SaverException;
 import com.thoughtworks.fusheng.executor.Executor;
-import com.thoughtworks.fusheng.executor.Executor.Context;
-import com.thoughtworks.fusheng.executor.ExecutorFactory;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.HTMLWriter;
 
 public class RunnerFacadeImpl implements RunnerFacade {
+
     private final RunnerResource runnerResource;
-    private Map<String, Object> domJson;
-    private final ParserAdapter parserAdapter;
     private Map<String, Object> symbols;
     private Class<?> fixtureClass;
+    private final Executor executor;
+    private final Document document;
 
     public RunnerFacadeImpl(Class<?> fixtureClass) {
         this.fixtureClass = fixtureClass;
 
         symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
-        parserAdapter = new ParserAdapter("javascript");
-
         String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
-        Map<String, Object> jsCodeAndDomJSON = parserAdapter.getJSCodeAndDomJSON(spec);
-        Object jsCodeObj = jsCodeAndDomJSON.get("jsCode");
-        JSONObject jsonJSCode = new JSONObject((Map<String, Object>) jsCodeObj);
-        domJson = (Map<String, Object>) jsCodeAndDomJSON.get("domJSON");
-        List<ExampleResource> exampleResources = jsonJSCode.keySet().stream()
-                                                           .map(key -> new ExampleResource(key, jsonJSCode.get(key).toString()))
-                                                           .collect(Collectors.toList());
-        runnerResource = new RunnerResource(exampleResources);
-    }
 
-    private static Object getFixtureInstance(Class<?> fixtureClass) {
-        try {
-            return fixtureClass.newInstance();
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClass.getName()), e);
-        }
+        document = getDocumentDom(spec);
+
+        ParserAdapter parserAdapter = new ParserAdapter("javascript", document);
+
+        Map<String, String> jsCode = parserAdapter.getJSCode();
+
+        List<ExampleResource> exampleResources = jsCode.entrySet().stream()
+            .map(entry -> new ExampleResource(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+
+        executor = parserAdapter.getExecutor();
+
+        runnerResource = new RunnerResource(exampleResources);
     }
 
     @Override
@@ -55,15 +53,12 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
     @Override
     public Boolean run(String exampleName) {
-        Executor executor = ExecutorFactory.getJsExecutor();
         RunnerResource runnerResource = getRunnerResource();
-        Updater updater = new Updater(new DomVisitor());
+
         runnerResource.exampleResources.stream()
-                                       .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
-                                       .forEach(exampleResource -> {
-                                           Context context = executor.exec(symbols, exampleResource.getJsCodes());
-                                           domJson = updater.update(context, domJson);
-                                       });
+            .filter(exampleResource -> exampleName.equalsIgnoreCase(exampleResource.getExampleName()))
+            .forEach(exampleResource -> executor.exec(symbols, exampleResource.getJsCodes()));
+
         // 暂时假定测试都是成功的
         return true;
     }
@@ -71,17 +66,35 @@ public class RunnerFacadeImpl implements RunnerFacade {
     @Override
     public void saveDomJSONToFile() {
         //TODO: 后续考虑处理多个 fixture 重名的情况
-        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "spec", fixtureClass.getSimpleName() + ".html");
+        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "spec",
+            fixtureClass.getSimpleName() + ".html");
 
         try {
             Path folder = path.getParent();
             if (!Files.exists(folder)) {
                 Files.createDirectories(folder);
             }
-            String html = parserAdapter.transformDomJSONToHtml(domJson);
-            Files.writeString(path, html, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            HTMLWriter htmlWriter = new HTMLWriter(new FileWriter(path.toFile()));
+            htmlWriter.write(document);
         } catch (IOException e) {
             throw new SaverException(String.format("Save spec failed: %s", path), e);
+        }
+    }
+
+    private static Object getFixtureInstance(Class<?> fixtureClass) {
+        try {
+            return fixtureClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClass.getName()),
+                e);
+        }
+    }
+
+    private static Document getDocumentDom(String document) {
+        try {
+            return DocumentHelper.parseText(document);
+        } catch (Exception ex) {
+            throw new ExecutorException("Init spec dom failed", ex);
         }
     }
 }

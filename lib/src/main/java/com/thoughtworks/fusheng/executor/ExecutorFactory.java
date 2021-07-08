@@ -1,11 +1,8 @@
 package com.thoughtworks.fusheng.executor;
 
 public class ExecutorFactory {
-    public static Executor getExecutorByName(String scriptingName) {
-        return Executor.of(scriptingName);
-    }
 
-    public static Executor getJsExecutor() {
-        return ExecutorFactory.getExecutorByName("javascript");
+    public static Executor getExecutor(String scripting, String initScript) {
+        return new Executor(scripting, StdEnvironment.createEnv(), initScript);
     }
 }

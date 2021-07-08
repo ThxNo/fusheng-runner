@@ -6,7 +6,7 @@ import static com.thoughtworks.fusheng.DomHelper.isIncludeClass;
 import static com.thoughtworks.fusheng.DomHelper.updateClass;
 import static com.thoughtworks.fusheng.DomHelper.updateContent;
 
-import com.thoughtworks.fusheng.executor.Executor.Context;
+import com.thoughtworks.fusheng.executor.StdEnvironment.Context;
 import java.util.Map;
 import java.util.Objects;
 

@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.google.common.collect.ImmutableMap;
 import com.thoughtworks.fusheng.executor.Executor;
-import com.thoughtworks.fusheng.executor.Executor.Context;
+import com.thoughtworks.fusheng.executor.ExecutorFactory;
+import com.thoughtworks.fusheng.executor.StdEnvironment.Context;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class ExecutorTest {
 
     @Test
     void should_exec_js_code_with_given_symbol_success() {
-        Executor executor = Executor.of("javascript");
+        Executor executor = ExecutorFactory.getExecutor("javascript", "");
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
         String jsCode = "c = fixture.add(2, 3);";
@@ -36,7 +37,7 @@ class ExecutorTest {
     @Test
     void should_exec_js_and_set_context_success() {
 
-        Executor executor = Executor.of("javascript");
+        Executor executor = ExecutorFactory.getExecutor("javascript", "");
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
         String jsCode = "context.result = fixture.add(5, 3);";
@@ -50,18 +51,18 @@ class ExecutorTest {
     @Test
     void should_exec_js_and_get_nested_context_by_jsonpath_success() {
 
-        Executor executor = Executor.of("javascript");
+        Executor executor = ExecutorFactory.getExecutor("javascript", "");
 
         String ctxString =
-                "        {\"expect\": {\n" +
-                        "            \"value\": 1,\n" +
-                        "            \"class\": [\"assert-expect\", \"error\"]\n" +
-                        "        },\n" +
-                        "        \"actual\": {\n" +
-                        "            \"value\": 2,\n" +
-                        "            \"class\": [\"assert-actual\", \"visible\"]\n" +
-                        "        }\n" +
-                        "    }";
+            "        {\"expect\": {\n" +
+                "            \"value\": 1,\n" +
+                "            \"class\": [\"assert-expect\", \"error\"]\n" +
+                "        },\n" +
+                "        \"actual\": {\n" +
+                "            \"value\": 2,\n" +
+                "            \"class\": [\"assert-actual\", \"visible\"]\n" +
+                "        }\n" +
+                "    }";
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
         String jsCode = String.format("context.uuid1 = %s;", ctxString);
@@ -75,18 +76,18 @@ class ExecutorTest {
     @Test
     void should_return_null_while_path_not_exists() {
 
-        Executor executor = Executor.of("javascript");
+        Executor executor = ExecutorFactory.getExecutor("javascript", "");
 
         String ctxString =
-                "        {\"expect\": {\n" +
-                        "            \"value\": 1,\n" +
-                        "            \"class\": [\"assert-expect\", \"error\"]\n" +
-                        "        },\n" +
-                        "        \"actual\": {\n" +
-                        "            \"value\": 2,\n" +
-                        "            \"class\": [\"assert-actual\", \"visible\"]\n" +
-                        "        }\n" +
-                        "    }";
+            "        {\"expect\": {\n" +
+                "            \"value\": 1,\n" +
+                "            \"class\": [\"assert-expect\", \"error\"]\n" +
+                "        },\n" +
+                "        \"actual\": {\n" +
+                "            \"value\": 2,\n" +
+                "            \"class\": [\"assert-actual\", \"visible\"]\n" +
+                "        }\n" +
+                "    }";
 
         ImmutableMap<String, Object> symbols = ImmutableMap.of("fixture", new MockedFixture());
         String jsCode = String.format("context.uuid1 = %s;", ctxString);

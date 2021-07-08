@@ -1,51 +1,40 @@
 package com.thoughtworks.fusheng;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.thoughtworks.fusheng.exception.ParserAdapterException;
-
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import com.thoughtworks.fusheng.executor.Executor;
+import com.thoughtworks.fusheng.executor.ExecutorFactory;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
+import lombok.Setter;
+import org.dom4j.Document;
 
+@Setter
 public class ParserAdapter {
 
-    private final ScriptEngine engine;
+    private Executor executor;
 
     private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.cjs.js";
 
-    public ParserAdapter(String scripting) {
+    public ParserAdapter(String scripting, Document document) {
         try {
-            ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-            engine = scriptEngineManager.getEngineByName(scripting);
-            engine.eval(new FileReader(scriptPath));
-        } catch (FileNotFoundException e) {
+            executor = ExecutorFactory.getExecutor(scripting, Files.readString(Paths.get(scriptPath), UTF_8));
+            executor.addSymbol("$", document);
+        } catch (IOException e) {
             throw new ParserAdapterException("Not found file: " + scriptPath, e);
-        } catch (ScriptException e) {
-            throw new ParserAdapterException("Execute script exception: " + scriptPath, e);
         }
     }
 
-    private Object executeScript(String methodName, Object... args)  {
-        try {
-            Invocable invocable = (Invocable) this.engine;
-            return invocable.invokeFunction(methodName, args);
-        } catch (NoSuchMethodException e) {
-            throw new ParserAdapterException("No such methodName: " + methodName, e);
-        } catch (ScriptException e) {
-            throw new ParserAdapterException("Execute methodName exception: " + methodName, e);
-        }
+    public Map<String, String> getJSCode() {
+        Object result = executor.invoke("getJSCode");
+
+        return (Map<String, String>) result;
     }
 
-    public Map<String, Object> getJSCodeAndDomJSON(String html) {
-        Object result = executeScript("getJSCodeAndDomJSON", html);
-
-        return (Map<String, Object>) result;
-    }
-
-    public String transformDomJSONToHtml(Object domJSON)  {
-        return (String) executeScript("transformDomJSONToHtml", domJSON);
+    public Executor getExecutor() {
+        return executor;
     }
 }

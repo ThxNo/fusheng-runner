@@ -1,6 +1,6 @@
 package com.thoughtworks.fusheng;
 
-import com.thoughtworks.fusheng.executor.Executor.Context;
+import com.thoughtworks.fusheng.executor.StdEnvironment.Context;
 import java.util.Map;
 
 public interface Visitor {
