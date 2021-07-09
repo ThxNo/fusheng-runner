@@ -76,6 +76,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
             }
             HTMLWriter htmlWriter = new HTMLWriter(new FileWriter(path.toFile()));
             htmlWriter.write(document);
+            htmlWriter.close();
         } catch (IOException e) {
             throw new SaverException(String.format("Save spec failed: %s", path), e);
         }
