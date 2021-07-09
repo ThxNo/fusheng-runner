@@ -50,12 +50,12 @@ public class StdEnvironment {
     }
 
     @FunctionalInterface
-    private interface func<T> {
+    private interface Func<T> {
 
         T apply(Object... obj);
     }
 
-    private static func<Object> wrapFunc(Object clz, Method method) {
+    private static Func<Object> wrapFunc(Object clz, Method method) {
         return (Object... args) -> {
             try {
                 return method.invoke(clz, args);

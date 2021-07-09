@@ -85,7 +85,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
         try {
             return fixtureClass.newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
-            throw new FixtureInitFailedException(String.format("fixture %s initialize failed", fixtureClass.getName()),
+            throw new FixtureInitFailedException(String.format("Fixture %s initialize failed", fixtureClass.getName()),
                 e);
         }
     }
