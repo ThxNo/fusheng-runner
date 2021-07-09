@@ -1,34 +1,34 @@
 package com.thoughtworks.fusheng;
 
+import com.google.common.io.CharStreams;
 import com.thoughtworks.fusheng.exception.ReaderException;
-
 import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 public class Reader {
-  static public String read(String path) {
-    try {
-      String absolutePath = Optional.ofNullable(Reader.class.getClassLoader().getResource(path))
-              .map(URL::getPath)
-              .orElseThrow(() -> new ReaderException("No such file: " + path));
-      return Files.readString(Paths.get(absolutePath), StandardCharsets.UTF_8);
-    } catch (NoSuchFileException e) {
-      throw new ReaderException("No such file: " + path, e);
-    } catch (IOException e) {
-      throw new ReaderException("Failed to read: " + path, e);
+
+    static public String read(String path) {
+        try {
+            InputStreamReader inputStreamReader = Optional
+                .ofNullable(Reader.class.getClassLoader().getResourceAsStream(path))
+                .map(InputStreamReader::new)
+                .orElseThrow(() -> new ReaderException("No such file: " + path));
+            return CharStreams.toString(inputStreamReader);
+
+        } catch (NoSuchFileException e) {
+            throw new ReaderException("No such file: " + path, e);
+        } catch (IOException e) {
+            throw new ReaderException("Failed to read: " + path, e);
+        }
     }
-  }
 
-  static public String getSpecFilePath(String fixtureFileName) {
-    return "template/" + fixtureFileName + ".html";
-  }
+    static public String getSpecFilePath(String fixtureFileName) {
+        return "template/" + fixtureFileName + ".html";
+    }
 
-  public static String getSpecByFixture(String fixtureFileName) {
-    return read(getSpecFilePath(fixtureFileName));
-  }
+    public static String getSpecByFixture(String fixtureFileName) {
+        return read(getSpecFilePath(fixtureFileName));
+    }
 }

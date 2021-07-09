@@ -15,7 +15,7 @@ class ParserAdapterTest {
     void getJSCode() {
         Map<Object, Object> mockedJsCode = ImmutableMap.of();
         Executor executor = mock(Executor.class);
-        when(executor.invoke("getJSCode")).thenReturn(mockedJsCode);
+        when(executor.invoke("getJsCode")).thenReturn(mockedJsCode);
 
         ParserAdapter javascript = new ParserAdapter("javascript", null);
         javascript.setExecutor(executor);

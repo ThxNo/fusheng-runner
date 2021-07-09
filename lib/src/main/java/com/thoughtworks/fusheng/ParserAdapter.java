@@ -29,7 +29,7 @@ public class ParserAdapter {
     }
 
     public Map<String, String> getJSCode() {
-        Object result = executor.invoke("getJSCode");
+        Object result = executor.invoke("getJsCode");
 
         return (Map<String, String>) result;
     }
