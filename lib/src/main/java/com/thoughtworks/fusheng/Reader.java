@@ -25,7 +25,7 @@ public class Reader {
     }
 
     static public String getSpecFilePath(String fixtureFileName) {
-        return "template/" + fixtureFileName + ".html";
+        return "fusheng/spec/" + fixtureFileName + ".html";
     }
 
     public static String getSpecByFixture(String fixtureFileName) {

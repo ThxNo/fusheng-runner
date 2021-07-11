@@ -65,8 +65,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
     @Override
     public void saveDomJSONToFile() {
-        //TODO: 后续考虑处理多个 fixture 重名的情况
-        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "spec",
+        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "fusheng", "result",
             fixtureClass.getSimpleName() + ".html");
 
         try {

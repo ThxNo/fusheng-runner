@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ReaderTest {
   @Test
   void should_get_exception_when_receive_a_invalid_path() {
-    String invalidPath = "template/invalidPath.html";
+    String invalidPath = "fusheng/spec/invalidPath.html";
     assertThrows(ReaderException.class, () -> Reader.read(invalidPath), "No such file: " + invalidPath);
   }
 
@@ -28,14 +28,14 @@ class ReaderTest {
             "  </p>\n" +
             "</body>\n" +
             "</html>\n";
-    String actual = Reader.read("template/spec.html");
+    String actual = Reader.read("fusheng/spec/spec.html");
 
     assertEquals(expected, actual);
   }
 
   @Test
   void should_get_spec_html_path_when_receive_a_valid_fixture_path() {
-    String expected = "template/spec.html";
+    String expected = "fusheng/spec/spec.html";
     String actual = Reader.getSpecFilePath("spec");
 
     assertEquals(expected, actual);
