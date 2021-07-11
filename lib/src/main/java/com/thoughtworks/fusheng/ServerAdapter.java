@@ -10,12 +10,20 @@ public class ServerAdapter {
         // 通过 htmlContent 获得 jsCode
         // 然后在 fixture 的上下文中执行 jsCode 并获得执行后的 Document
 
-        String experimentSpecName = specName + System.currentTimeMillis();
-        Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "fusheng", "experiment",
-                experimentSpecName + ".html");
+        String experimentSpecName = this.getNewExperimentSpecName(specName);
+        Path reportFilePath = this.getExperimentReportFilePath(experimentSpecName);
 
-        // 保存最新后的 Document 到 path
+        // 保存最新后的 Document 到 reportFilePath
 
         return experimentSpecName;
+    }
+
+    private String getNewExperimentSpecName(String specName) {
+        return specName + "_" + System.currentTimeMillis();
+    }
+
+    private Path getExperimentReportFilePath(String specName) {
+        return Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "fusheng", "experiment",
+                specName + ".html");
     }
 }
