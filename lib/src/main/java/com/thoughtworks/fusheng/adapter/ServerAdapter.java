@@ -1,28 +1,33 @@
 package com.thoughtworks.fusheng.adapter;
 
+import com.thoughtworks.fusheng.RunnerFacadeImpl;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ServerAdapter {
-    public String runExperiment(String specName, String htmlContent) {
+    public static String runExperiment(String specName, String htmlContent) throws ClassNotFoundException {
+        Class<?> spec = Class.forName("com.thoughtworks.fusheng.fixture." + specName);
+        RunnerFacadeImpl runner = new RunnerFacadeImpl(spec, htmlContent);
 
-        // 通过 specName 找到对应的 fixture
-        // 通过 htmlContent 获得 jsCode
-        // 然后在 fixture 的上下文中执行 jsCode 并获得执行后的 Document
+        runner.getRunnerResource().getExampleResources().forEach(exampleResource -> {
+            String exampleName = exampleResource.getExampleName();
+            runner.run(exampleName);
+        });
 
-        String experimentSpecName = this.getNewExperimentSpecName(specName);
-        Path reportFilePath = this.getExperimentReportFilePath(experimentSpecName);
+        String experimentSpecName = ServerAdapter.getNewExperimentSpecName(specName);
+        Path reportFilePath = ServerAdapter.getExperimentReportFilePath(experimentSpecName);
 
-        // 保存最新后的 Document 到 reportFilePath
+        runner.saveDomJSONToFile(reportFilePath);
 
         return experimentSpecName;
     }
 
-    private String getNewExperimentSpecName(String specName) {
+    private static String getNewExperimentSpecName(String specName) {
         return specName + "_" + System.currentTimeMillis();
     }
 
-    private Path getExperimentReportFilePath(String specName) {
+    private static Path getExperimentReportFilePath(String specName) {
         return Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "fusheng", "experiment",
                 specName + ".html");
     }

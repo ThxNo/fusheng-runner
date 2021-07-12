@@ -20,17 +20,25 @@ import org.dom4j.io.HTMLWriter;
 
 public class RunnerFacadeImpl implements RunnerFacade {
 
-    private final RunnerResource runnerResource;
+    private RunnerResource runnerResource;
     private Map<String, Object> symbols;
     private Class<?> fixtureClass;
-    private final Executor executor;
-    private final Document document;
+    private Executor executor;
+    private Document document;
 
     public RunnerFacadeImpl(Class<?> fixtureClass) {
+        String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
+        init(fixtureClass, spec);
+    }
+
+    public RunnerFacadeImpl(Class<?> fixtureClass, String html) {
+        init(fixtureClass, html);
+    }
+
+    private void init(Class<?> fixtureClass, String spec) {
         this.fixtureClass = fixtureClass;
 
         symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
-        String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
 
         document = getDocumentDom(spec);
 
@@ -39,8 +47,8 @@ public class RunnerFacadeImpl implements RunnerFacade {
         Map<String, String> jsCode = parserAdapter.getJSCode();
 
         List<ExampleResource> exampleResources = jsCode.entrySet().stream()
-            .map(entry -> new ExampleResource(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
+                .map(entry -> new ExampleResource(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
 
         executor = parserAdapter.getExecutor();
 
@@ -68,7 +76,11 @@ public class RunnerFacadeImpl implements RunnerFacade {
     public void saveDomJSONToFile() {
         Path path = Paths.get(System.getProperty("user.dir"), "build", "reports", "tests", "fusheng", "result",
             fixtureClass.getSimpleName() + ".html");
+        this.saveDomJSONToFile(path);
+    }
 
+    @Override
+    public void saveDomJSONToFile(Path path) {
         try {
             Path folder = path.getParent();
             if (!Files.exists(folder)) {
