@@ -1,4 +1,4 @@
-package com.thoughtworks.fusheng;
+package com.thoughtworks.fusheng.adapter;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

@@ -1,4 +1,4 @@
-package com.thoughtworks.fusheng;
+package com.thoughtworks.fusheng.adapter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

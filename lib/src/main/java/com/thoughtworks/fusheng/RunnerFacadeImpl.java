@@ -1,6 +1,7 @@
 package com.thoughtworks.fusheng;
 
 import com.google.common.collect.ImmutableMap;
+import com.thoughtworks.fusheng.adapter.ParserAdapter;
 import com.thoughtworks.fusheng.exception.ExecutorException;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
 import com.thoughtworks.fusheng.exception.SaverException;
