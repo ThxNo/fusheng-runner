@@ -44,7 +44,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
         ParserAdapter parserAdapter = new ParserAdapter("javascript", document);
 
-        Map<String, String> jsCode = parserAdapter.getJSCode();
+        Map<String, String> jsCode = parserAdapter.getJsCode();
 
         List<ExampleResource> exampleResources = jsCode.entrySet().stream()
                 .map(entry -> new ExampleResource(entry.getKey(), entry.getValue()))

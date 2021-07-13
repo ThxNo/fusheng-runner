@@ -28,7 +28,7 @@ public class ParserAdapter {
         }
     }
 
-    public Map<String, String> getJSCode() {
+    public Map<String, String> getJsCode() {
         Object result = executor.invoke("getJsCode");
 
         return (Map<String, String>) result;

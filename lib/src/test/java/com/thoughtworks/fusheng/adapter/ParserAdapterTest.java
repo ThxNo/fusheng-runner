@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class ParserAdapterTest {
 
     @Test
-    void getJSCode() {
+    void getJsCode() {
         Map<Object, Object> mockedJsCode = ImmutableMap.of();
         Executor executor = mock(Executor.class);
         when(executor.invoke("getJsCode")).thenReturn(mockedJsCode);
@@ -20,7 +20,7 @@ class ParserAdapterTest {
         ParserAdapter javascript = new ParserAdapter("javascript", null);
         javascript.setExecutor(executor);
 
-        Map<String, String> jsCode = javascript.getJSCode();
+        Map<String, String> jsCode = javascript.getJsCode();
 
         assertEquals(mockedJsCode, jsCode);
     }
