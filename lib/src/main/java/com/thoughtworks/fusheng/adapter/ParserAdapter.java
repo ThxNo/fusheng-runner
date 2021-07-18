@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+
+import com.thoughtworks.fusheng.helper.DomHelperImpl;
 import lombok.Setter;
-import org.dom4j.Document;
+import org.jsoup.nodes.Document;
 
 @Setter
 public class ParserAdapter {
@@ -22,7 +24,7 @@ public class ParserAdapter {
     public ParserAdapter(String scripting, Document document) {
         try {
             executor = ExecutorFactory.getExecutor(scripting, Files.readString(Paths.get(scriptPath), UTF_8));
-            executor.addSymbol("$", document);
+            executor.addSymbol("$", new DomHelperImpl(document));
         } catch (IOException e) {
             throw new ParserAdapterException("Not found file: " + scriptPath, e);
         }
