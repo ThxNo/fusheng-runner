@@ -6,7 +6,7 @@ import com.thoughtworks.fusheng.exception.ExecutorException;
 import com.thoughtworks.fusheng.exception.FixtureInitFailedException;
 import com.thoughtworks.fusheng.executor.Executor;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +20,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
   private Map<String, Object> symbols;
   private Class<?> fixtureClass;
   private Executor executor;
-  private Document document;
+  private Element element;
 
   public RunnerFacadeImpl(Class<?> fixtureClass) {
     String spec = Reader.getSpecByFixture(fixtureClass.getSimpleName());
@@ -36,9 +36,9 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
     symbols = ImmutableMap.of("fixture", getFixtureInstance(fixtureClass));
 
-    document = getDocumentDom(spec);
+    element = getElementDom(spec);
 
-    ParserAdapter parserAdapter = new ParserAdapter("javascript", document);
+    ParserAdapter parserAdapter = new ParserAdapter("javascript", element);
 
     Map<String, String> jsCode = parserAdapter.getJsCode();
 
@@ -77,7 +77,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
 
   @Override
   public void saveDomJSONToFile(Path path) {
-    Writer.write(path, document);
+    Writer.write(path, element);
   }
 
   private static Object getFixtureInstance(Class<?> fixtureClass) {
@@ -89,7 +89,7 @@ public class RunnerFacadeImpl implements RunnerFacade {
     }
   }
 
-  private static Document getDocumentDom(String document) {
+  private static Element getElementDom(String document) {
     try {
       return Jsoup.parse(document);
     } catch (Exception ex) {

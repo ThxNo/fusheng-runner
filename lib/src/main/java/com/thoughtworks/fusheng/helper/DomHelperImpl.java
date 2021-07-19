@@ -2,35 +2,39 @@ package com.thoughtworks.fusheng.helper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DomHelperImpl implements DomHelper {
-  private Document document;
+  private Element element;
 
-  public DomHelperImpl(Document document) {
-    this.document = document;
+  public DomHelperImpl(Element element) {
+    this.element = element;
+  }
+
+  public static DomHelperImpl of(Element element) {
+    return new DomHelperImpl(element);
   }
 
   @Override
   public List<DomHelper> getElementsByClassName(String classname) {
-    return document
+    return element
             .getElementsByClass(classname)
             .stream()
-            .map(element -> new DomHelperImpl(Jsoup.parse(element.html())))
+            .map(DomHelperImpl::of)
             .collect(Collectors.toList());
   }
 
   @Override
   public DomHelper getElementById(String id) {
-    return new DomHelperImpl(Jsoup.parse(document.getElementById(id).html()));
+    return new DomHelperImpl(Jsoup.parse(element.getElementById(id).html()));
   }
 
   @Override
   public List<DomHelper> children() {
-    return document
+    return element
             .children()
             .stream()
             .map(child -> new DomHelperImpl(Jsoup.parse(child.html())))
@@ -39,37 +43,37 @@ public class DomHelperImpl implements DomHelper {
 
   @Override
   public void addClass(String classname) {
-    document.addClass(classname);
+    element.addClass(classname);
   }
 
   @Override
   public boolean hasClass(String classname) {
-    return document.hasClass(classname);
+    return element.hasClass(classname);
   }
 
   @Override
   public String text() {
-    return document.text();
+    return element.text();
   }
 
   @Override
   public String getAttr(String name) {
-    Attributes attributes = document.attributes();
+    Attributes attributes = element.attributes();
     return attributes.get(name);
   }
 
   @Override
   public void setAttr(String name, String value) {
-    document.attr(name, value);
+    element.attr(name, value);
   }
 
   @Override
   public void append(String html) {
-    document.append(html);
+    element.append(html);
   }
 
   @Override
   public void empty() {
-    document.empty();
+    element.empty();
   }
 }

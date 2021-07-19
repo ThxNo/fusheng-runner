@@ -1,7 +1,7 @@
 package com.thoughtworks.fusheng;
 
 import com.thoughtworks.fusheng.exception.SaverException;
-import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Writer {
-  static public void write(Path path, Document document) {
+  static public void write(Path path, Element element) {
     try {
       Path folder = path.getParent();
       if (!Files.exists(folder)) {
@@ -19,7 +19,7 @@ public class Writer {
 
       FileOutputStream fos = new FileOutputStream(path.getFileName().toString());
       OutputStreamWriter osw = new OutputStreamWriter(fos, "utf-8");
-      osw.write(document.html());
+      osw.write(element.html());
       osw.close();
     } catch (IOException e) {
       throw new SaverException(String.format("Save spec failed: %s", path), e);

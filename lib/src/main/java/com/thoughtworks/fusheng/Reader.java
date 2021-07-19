@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class Reader {
 
-    static public String read(String path) {
+    public static String read(String path) {
         try {
             InputStreamReader inputStreamReader = Optional
                 .ofNullable(Reader.class.getClassLoader().getResourceAsStream(path))
@@ -24,7 +24,7 @@ public class Reader {
         }
     }
 
-    static public String getSpecFilePath(String fixtureFileName) {
+    public static String getSpecFilePath(String fixtureFileName) {
         return "fusheng/spec/" + fixtureFileName + ".html";
     }
 
