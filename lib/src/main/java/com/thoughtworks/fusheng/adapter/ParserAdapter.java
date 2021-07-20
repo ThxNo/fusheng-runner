@@ -5,7 +5,7 @@ import com.thoughtworks.fusheng.executor.Executor;
 import com.thoughtworks.fusheng.executor.ExecutorFactory;
 import com.thoughtworks.fusheng.helper.DomHelperImpl;
 import lombok.Setter;
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,10 +21,10 @@ public class ParserAdapter {
 
     private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.cjs.js";
 
-    public ParserAdapter(String scripting, Element element) {
+    public ParserAdapter(String scripting, Document document) {
         try {
             executor = ExecutorFactory.getExecutor(scripting, Files.readString(Paths.get(scriptPath), UTF_8));
-            executor.addSymbol("$", new DomHelperImpl(element));
+            executor.addSymbol("$", new DomHelperImpl(document));
         } catch (IOException e) {
             throw new ParserAdapterException("Not found file: " + scriptPath, e);
         }
