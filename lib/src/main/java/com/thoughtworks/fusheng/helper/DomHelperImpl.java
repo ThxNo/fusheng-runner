@@ -37,7 +37,7 @@ public class DomHelperImpl implements DomHelper {
     return element
             .children()
             .stream()
-            .map(child -> new DomHelperImpl(Jsoup.parse(child.html())))
+            .map(DomHelperImpl::of)
             .collect(Collectors.toList());
   }
 
