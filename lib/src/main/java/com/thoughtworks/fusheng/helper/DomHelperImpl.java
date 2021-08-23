@@ -1,11 +1,10 @@
 package com.thoughtworks.fusheng.helper;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class DomHelperImpl implements DomHelper {
   private Element element;
@@ -28,8 +27,17 @@ public class DomHelperImpl implements DomHelper {
   }
 
   @Override
+  public List<DomHelper> getElementsByTag(String tag) {
+    return element
+            .getElementsByTag(tag)
+            .stream()
+            .map(DomHelperImpl::of)
+            .collect(Collectors.toList());
+  }
+
+  @Override
   public DomHelper getElementById(String id) {
-    return new DomHelperImpl(Jsoup.parse(element.getElementById(id).html()));
+    return DomHelperImpl.of(element.getElementById(id));
   }
 
   @Override
@@ -58,8 +66,7 @@ public class DomHelperImpl implements DomHelper {
 
   @Override
   public String getAttr(String name) {
-    Attributes attributes = element.attributes();
-    return attributes.get(name);
+    return element.attributes().get(name);
   }
 
   @Override
@@ -73,7 +80,24 @@ public class DomHelperImpl implements DomHelper {
   }
 
   @Override
+  public void setText(String text) {
+    element.appendText(text);
+  }
+
+  @Override
   public void empty() {
     element.empty();
+  }
+
+  @Override
+  public List<NameValuePair> getAttributes() {
+    return StreamSupport.stream(element.attributes().spliterator(), false)
+            .map(attribute -> new NameValuePair(attribute.getKey(), attribute.getValue()))
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public void removeAttributes() {
+      element.clearAttributes();
   }
 }

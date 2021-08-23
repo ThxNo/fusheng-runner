@@ -1,36 +1,42 @@
 package com.thoughtworks.fusheng.adapter;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import com.thoughtworks.fusheng.exception.ParserAdapterException;
 import com.thoughtworks.fusheng.executor.Executor;
 import com.thoughtworks.fusheng.executor.ExecutorFactory;
 import com.thoughtworks.fusheng.helper.DomHelperImpl;
-import lombok.Setter;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-@Setter
 public class ParserAdapter {
 
-    private Executor executor;
+    private final Executor executor;
 
-    private final String scriptPath = "src/main/java/com/thoughtworks/fusheng/parser/parser.cjs.js";
+    private static final ParserAdapter instance = new ParserAdapter("javascript");
 
-    public ParserAdapter(String scripting, Document document) {
+    public static ParserAdapter getInstance(){
+        return instance;
+    }
+
+    private ParserAdapter(String scripting) {
+        String scriptPath = "";
         try {
-            executor = ExecutorFactory.getExecutor(scripting, Files.readString(Paths.get(scriptPath), UTF_8));
-            executor.addSymbol("$", new DomHelperImpl(document));
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("parser.cjs.js");
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charsets.UTF_8);
+            String content = CharStreams.toString(inputStreamReader);
+            executor = ExecutorFactory.getExecutor(scripting, content);
+            inputStreamReader.close();
         } catch (IOException e) {
             throw new ParserAdapterException("Not found file: " + scriptPath, e);
         }
     }
 
-    public Map<String, String> getJsCode() {
+    public Map<String, String> getJsCode(Document document) {
+        executor.setSymbol("$", new DomHelperImpl(document));
         Object result = executor.invoke("getJsCode");
 
         return (Map<String, String>) result;
