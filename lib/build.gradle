@@ -1,16 +1,22 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
+
+group = 'io.github.thxno'
+version = '1.0'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
@@ -49,4 +55,57 @@ jar {
                 }
     }
     duplicatesStrategy(DuplicatesStrategy.WARN)
+    from sourceSets.main.output
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'fusheng-runner'
+            from components.java
+//            artifact jarWithSources
+            pom {
+                name = 'fusheng runner'
+                description = 'fusheng livedoc core lib'
+                url = 'https://github.com/ThxNo/fusheng-runner'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = developerName
+                        email = developerEmail
+                    }
+                }
+                scm {
+                    url = 'https://github.com/ThxNo/fusheng-runner'
+                    connection = 'scm:git:git://github.com/ThxNo/fusheng-runner.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/ThxNo/fusheng-runner.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username sonaqubeUsername
+                password sonaqubePassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    // <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    // 防止本地打开中文乱码
+    options.addStringOption("charset", "UTF-8")
 }
